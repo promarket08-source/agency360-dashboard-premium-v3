@@ -1986,3 +1986,24 @@ setTimeout(() => {
     observer.observe(telegramSection, { attributes: true, attributeFilter: ['class'] });
   }
 }, 1000);
+
+// ========== INICIALIZACIÓN FINAL ==========
+// Mostrar sección activa por defecto
+document.addEventListener('DOMContentLoaded', () => {
+  // Activar la primera sección (Executive Dashboard)
+  showSection('executive');
+  
+  // Cargar datos iniciales
+  updateDashboardFromMemory();
+  
+  // Iniciar voz si está habilitado
+  if ('speechSynthesis' in window && CONFIG.voiceEnabled) {
+    setTimeout(() => {
+      speak('Bienvenido a Agencia 360 Dashboard Premium v3.0. Todos los módulos están integrados. ¿En qué puedo ayudarte?');
+    }, 2000);
+  }
+  
+  console.log('Agencia 360 Dashboard fully loaded with all modules.');
+});
+
+console.log('Agencia 360 Dashboard Premium v3.0 - All systems ready!');
