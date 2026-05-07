@@ -3625,9 +3625,9 @@ button:focus-visible, input:focus-visible {
             🎯 Capturar Lead Masivo<br>
             <span style="font-size:11px;opacity:0.8">Genera 100 leads automáticos</span>
           </button>
-          <button class="header-btn" style="background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));color:white;border:none;padding:16px;font-size:14px;font-weight:600" onclick="executeAction('generate-project')">
-            🚀 Generar Proyecto<br>
-            <span style="font-size:11px;opacity:0.8">Crea landing/ecommerce/CRM</span>
+          <button class="header-btn" style="background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));color:white;border:none;padding:16px;font-size:14px;font-weight:600" onclick="sendOrderToIA()">
+            🤖 Enviar Orden a IA<br>
+            <span style="font-size:11px;opacity:0.8">Dale ordenes de proyectos a la IA</span>
           </button>
           <button class="header-btn" style="background:linear-gradient(135deg,var(--accent-purple),var(--accent-yellow));color:white;border:none;padding:16px;font-size:14px;font-weight:600" onclick="executeAction('generate-content')">
             📄 Generar Contenido<br>
@@ -3757,6 +3757,7 @@ button:focus-visible, input:focus-visible {
 </div>
 
   <script src="dashboard-premium.js?t=20260507"></script>
+  <script src="actions.js"></script>
 
 <!-- Footer obligatorio -->
 <footer style="margin-top:40px;padding:20px;text-align:center;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);">
