@@ -6,3 +6,5 @@ build/
 env/
 *.env
 db.sqlite3
+
+.vercel
