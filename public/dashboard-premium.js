@@ -1684,101 +1684,305 @@ setTimeout(() => {
   }
 }, 1000);
 
-// ========== CONTROL TOWER ACTIONS ==========
-function executeAction(action) {
-  console.log('Executing action:', action);
-  switch(action) {
-    case 'capture-lead':
-      captureMassLeads();
-      break;
-    case 'generate-project':
-      showSection('generator');
-      speak('Abriendo generador de proyectos. Selecciona un tipo para crear automáticamente.');
-      break;
-    case 'generate-content':
-      showSection('resources-gen');
-      speak('Abriendo generador de recursos. Crea documentos, posts y reportes automáticamente.');
-      break;
-    case 'deploy-vercel':
-      deployToVercel();
-      break;
-    case 'scale-agents':
-      scaleAgents();
-      break;
-    case 'start-all':
-      startFactory();
-      break;
-    default:
-      alert('⚡ Acción: ' + action);
+// ========== NUEVO CLIENTE MODAL ==========
+function openNewClientModal() {
+  const modal = document.getElementById('newClientModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    // Pre-llenar con Burbuja si es el cliente que mencionó
+    const clientName = prompt('¿Es el cliente Burbuja? (s/n)', 's');
+    if (clientName && clientName.toLowerCase() === 's') {
+      document.getElementById('clientName').value = 'Burbuja';
+      document.getElementById('clientWebsite').value = 'burbuja.com';
+      document.getElementById('clientNiche').value = 'Turismo';
+      document.getElementById('clientService').value = 'Landing Page';
+    }
+    speak('Formulario de nuevo cliente abierto. Completa los datos para asignar agentes.');
   }
 }
 
-function controlService(service) {
-  console.log('Controlling service:', service);
-  switch(service) {
-    case 'restart-backend':
-      alert('🔄 Reiniciando Backend...\n\nEjecuta en terminal:\nSet-Location D:\\AI_Agency\\agency-hub; node server.js');
-      speak('Reiniciando backend en puerto 3000.');
-      break;
-    case 'restart-n8n':
-      alert('🔄 Reiniciando n8n...\n\nEjecuta en terminal:\nn8n start');
-      speak('Reiniciando n8n en puerto 5678.');
-      break;
-    default:
-      alert('⚙️ Servicio: ' + service);
-  }
-}
-
-function captureMassLeads() {
-  const leads = [];
-  const services = ['Landing Page', 'E-commerce', 'CRM', 'App Móvil', 'Automatización'];
-  const names = ['Juan Pérez', 'María García', 'Carlos López', 'Ana Martínez', 'Luis Rodríguez', 'Sofia Hernández', 'Diego Ramírez', 'Valentina Torres'];
-  
-  for (let i = 0; i < 100; i++) {
-    leads.push({
-      id: Date.now() + i,
-      name: names[Math.floor(Math.random() * names.length)] + ' ' + (i + 1),
-      email: `lead${i + 1}@ejemplo.com`,
-      service: services[Math.floor(Math.random() * services.length)],
-      status: 'Nuevo',
-      date: new Date().toISOString(),
-      source: 'Captura Masiva'
+function closeNewClientModal() {
+  const modal = document.getElementById('newClientModal');
+  if (modal) {
+    modal.style.display = 'none';
+    // Limpiar campos
+    ['clientName', 'clientEmail', 'clientWebsite', 'clientNiche', 'clientService'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
     });
+    const msg = document.getElementById('clientMessage');
+    if (msg) {
+      msg.style.display = 'none';
+      msg.textContent = '';
+    }
   }
+}
+
+function saveNewClient() {
+  const name = document.getElementById('clientName')?.value?.trim();
+  const email = document.getElementById('clientEmail')?.value?.trim();
+  const website = document.getElementById('clientWebsite')?.value?.trim();
+  const niche = document.getElementById('clientNiche')?.value;
+  const service = document.getElementById('clientService')?.value;
+  
+  if (!name || !email) {
+    showClientMessage('❌ Nombre y email son obligatorios', 'red');
+    return;
+  }
+  
+  if (!niche || !service) {
+    showClientMessage('❌ Selecciona nicho y servicio', 'red');
+    return;
+  }
+  
+  // Crear cliente
+  const newClient = {
+    id: Date.now(),
+    name,
+    email,
+    website: website || 'No especificado',
+    niche,
+    service,
+    status: 'Nuevo',
+    mrr: getServicePrice(service),
+    agents: assignAgentsToClient(name, service),
+    created: new Date().toISOString(),
+    renewal: new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0]
+  };
   
   try {
-    const existingLeads = JSON.parse(localStorage.getItem('leads') || '[]');
-    leads.push(...existingLeads);
-    localStorage.setItem('leads', JSON.stringify(leads));
-    alert(`🎯 ¡100 Leads Capturados!\n\nTotal leads: ${leads.length}\n\nSe han añadido automáticamente al CRM.`);
-    speak('100 leads capturados masivamente. La base de datos de clientes potenciales ha crecido significativamente.');
+    // Guardar en localStorage
+    const clients = JSON.parse(localStorage.getItem('crm_clients') || '[]');
+    clients.push(newClient);
+    localStorage.setItem('crm_clients', JSON.stringify(clients));
+    
+    // Actualizar tabla CRM visualmente
+    addClientToTable(newClient);
+    
+    // Actualizar contadores
+    updateCRMMetrics();
+    
+    showClientMessage(`✅ Cliente ${name} guardado! ${newClient.agents} agentes asignados.`, 'green');
+    
+    speak(`Cliente ${name} agregado exitosamente. ${newClient.agents} agentes de la IA han sido asignados para trabajar en ${service}.`);
+    
+    // Cerrar modal después de 2 segundos
+    setTimeout(() => {
+      closeNewClientModal();
+      // Ir a la sección CRM para ver el cliente
+      showSection('crm');
+    }, 2000);
+    
   } catch (e) {
-    console.error('Error capturing mass leads:', e);
+    console.error('Error saving client:', e);
+    showClientMessage('❌ Error al guardar cliente', 'red');
   }
 }
 
-function deployToVercel() {
-  alert(`🌐 Desplegando a Vercel...\n\nEjecuta en terminal:\nSet-Location D:\\AI_Agency\\agency-hub; vercel --prod`);
-  speak('Iniciando despliegue a Vercel. La actualización estará lista en minutos.');
+function assignAgentsToClient(clientName, service) {
+  // Asignar agentes basado en el servicio
+  const serviceAgents = {
+    'Landing Page': 12,
+    'E-commerce': 18,
+    'CRM': 24,
+    'App Móvil': 30,
+    'Automatización': 15
+  };
+  const assigned = serviceAgents[service] || 10;
+  console.log(`Assigned ${assigned} agents to client: ${clientName}`);
+  return assigned;
 }
 
-function scaleAgents() {
-  const current = 192;
-  const target = 500;
-  const progress = Math.floor((current / target) * 100);
-  
-  alert(`🤖 Escalando Agentes IA...\n\nActuales: ${current}\nObjetivo: ${target}\nProgreso: ${progress}%\n\nLos agentes se están activando automáticamente.`);
-  speak(`Escalando de ${current} a ${target} agentes. La capacidad de procesamiento aumentará significativamente.`);
+function getServicePrice(service) {
+  const prices = {
+    'Landing Page': 2500,
+    'E-commerce': 8500,
+    'CRM': 12000,
+    'App Móvil': 15000,
+    'Automatización': 5000
+  };
+  return prices[service] || 0;
 }
 
-function startFactory() {
-  alert(`🏭 ¡INICIANDO FÁBRICA DE CONTENIDO!\n\n✅ Backend: http://localhost:3000\n✅ n8n: http://localhost:5678\n✅ Dashboard: https://agency-hub-rho.vercel.app\n✅ 192 Agentes IA activos\n✅ 31 Proyectos indexados\n\n🎯 Objetivo: $10M en 2027\n\n¡La fábrica está operativa!`);
-  speak('Fábrica de contenido digital iniciada. Todos los sistemas operativos. Objetivo: escalar a 10 millones de dólares.');
+function showClientMessage(msg, color) {
+  const messageEl = document.getElementById('clientMessage');
+  if (messageEl) {
+    messageEl.textContent = msg;
+    messageEl.style.display = 'block';
+    messageEl.style.color = color === 'red' ? 'var(--accent-red)' : 'var(--accent-green)';
+    messageEl.style.padding = '8px';
+    messageEl.style.borderRadius = '6px';
+    messageEl.style.background = color === 'red' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)';
+  }
+}
+
+function addClientToTable(client) {
+  const tableBody = document.querySelector('#s-crm table tbody');
+  if (!tableBody) return;
   
-  // Auto-redirect to dashboard
-  setTimeout(() => {
-    window.open('https://agency-hub-rho.vercel.app/dashboard-premium.html', '_blank');
-  }, 2000);
+  const badgeClass = client.niche === 'Turismo' ? 'badge-purple' : 
+                    client.niche === 'Salud' ? 'badge-purple' :
+                    client.niche === 'Moda' ? 'badge-blue' : 'badge-orange';
+  
+  const statusBadge = client.status === 'Nuevo' ? 'badge-yellow' : 'badge-green';
+  const semaphore = client.status === 'Nuevo' ? 'semaphore-yellow' : 'semaphore-green';
+  
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td><strong>${client.name}</strong><br><span style="font-size:11px;color:var(--text-muted)">${client.website}</span></td>
+    <td><span class="badge ${badgeClass}">${client.niche}</span></td>
+    <td>$${client.mrr.toLocaleString()}</td>
+    <td><span class="badge badge-blue">Nuevo</span></td>
+    <td><span class="semaphore ${semaphore}"></span><span class="badge ${statusBadge}">${client.status}</span></td>
+    <td>${client.renewal}</td>
+    <td>${client.agents} agentes</td>
+    <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="viewClient('${client.name}')">Ver</button></td>
+  `;
+  tableBody.appendChild(newRow);
+}
+
+function updateCRMMetrics() {
+  try {
+    const clients = JSON.parse(localStorage.getItem('crm_clients') || '[]');
+    const total = 23 + clients.length; // 23 originales + nuevos
+    const active = clients.filter(c => c.status === 'Nuevo' || c.status === 'Activo').length + 21;
+    
+    // Actualizar tarjetas
+    const totalEl = document.querySelector('#s-crm .grid .card:nth-child(1) .card-value');
+    if (totalEl) totalEl.textContent = total;
+    
+    const activePercent = ((active / total) * 100).toFixed(1);
+    const progressFill = document.querySelector('#s-crm .progress-fill');
+    if (progressFill) {
+      progressFill.style.width = activePercent + '%';
+    }
+    
+    console.log(`CRM updated: ${total} total clients, ${active} active`);
+  } catch (e) {
+    console.error('Error updating CRM metrics:', e);
+  }
+}
+
+function viewClient(clientName) {
+  alert(`👤 Cliente: ${clientName}\n\nCargando perfil completo...\n\nAgentes trabajando: ${Math.floor(Math.random() * 20) + 5}\nEstado: Activo\n\nUsa el portal del cliente para más detalles.`);
+  showSection('client-portal');
 }
 
 console.log('Agencia 360 Control Tower initialized successfully!');
+
+// ========== TELEGRAM CONTROL ==========
+function openTelegramBot(botType) {
+  const bots = {
+    'main': 'https://t.me/Agencia360Bot', // Reemplaza con tu bot real
+    'opencode': 'https://t.me/opencode_bot', // Bot de opencode
+    'tasks': 'https://t.me/TaskManagerBot'
+  };
+  const url = bots[botType] || bots['main'];
+  window.open(url, '_blank');
+  speak(`Abriendo ${botType} bot en Telegram. Puedes enviar comandos y chatear con la IA.`);
+}
+
+function sendTelegramCommand(command) {
+  const message = command;
+  fetch('http://localhost:3000/api/notify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: `Comando remoto: ${command}` })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert(`📱 Comando enviado: ${command}\n\nRevisa tu Telegram para ver la respuesta.`);
+      addTelegramMessage('Tú', `Comando: ${command}`, 'command');
+    }
+  })
+  .catch(error => {
+    console.error('Error sending command:', error);
+    alert('❌ Error al enviar comando. Verifica que el backend esté corriendo.');
+  });
+}
+
+function sendTelegramMessage() {
+  const input = document.getElementById('telegramMessage');
+  if (!input) return;
+  const message = input.value.trim();
+  if (!message) {
+    alert('❌ Escribe un mensaje');
+    return;
+  }
+  
+  fetch('http://localhost:3000/api/notify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: `Mensaje: ${message}` })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      addTelegramMessage('Tú', message, 'user');
+      input.value = '';
+      speak('Mensaje enviado a Telegram. La IA responderá pronto.');
+    }
+  })
+  .catch(error => {
+    console.error('Error sending message:', error);
+    alert('❌ Error al enviar mensaje. Verifica que el backend esté corriendo.');
+  });
+}
+
+function addTelegramMessage(sender, text, type) {
+  const container = document.getElementById('telegramMessages');
+  if (!container) return;
+  
+  const colors = {
+    'user': 'var(--accent-blue)',
+    'command': 'var(--accent-green)',
+    'bot': 'var(--accent-purple)'
+  };
+  const borderColor = colors[type] || 'var(--accent-blue)';
+  
+  const messageDiv = document.createElement('div');
+  messageDiv.style.cssText = `padding:8px 12px;background:var(--bg-tertiary);border-radius:6px;margin-bottom:8px;border-left:3px solid ${borderColor}`;
+  messageDiv.innerHTML = `
+    <div style="font-size:11px;color:var(--text-muted)">${sender} • ${new Date().toLocaleTimeString()}</div>
+    <div style="font-size:12px;margin-top:4px">${text}</div>
+  `;
+  
+  container.insertBefore(messageDiv, container.firstChild);
+  
+  // Limitar a 10 mensajes
+  while (container.children.length > 10) {
+    container.removeChild(container.lastChild);
+  }
+}
+
+// Cargar mensajes de Telegram al abrir sección
+function loadTelegramMessages() {
+  fetch('http://localhost:3000/api/telegram-messages')
+    .then(response => response.json())
+    .then(messages => {
+      const container = document.getElementById('telegramMessages');
+      if (container && messages.length > 0) {
+        container.innerHTML = '';
+        messages.slice(0, 10).forEach(msg => {
+          addTelegramMessage(msg.sender, msg.text, msg.type);
+        });
+      }
+    })
+    .catch(error => console.error('Error loading Telegram messages:', error));
+}
+
+// Observer para cargar mensajes cuando se abre la sección
+setTimeout(() => {
+  const telegramSection = document.getElementById('s-telegram');
+  if (telegramSection) {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (telegramSection.classList.contains('active')) {
+          setTimeout(loadTelegramMessages, 300);
+        }
+      });
+    });
+    observer.observe(telegramSection, { attributes: true, attributeFilter: ['class'] });
+  }
+}, 1000);

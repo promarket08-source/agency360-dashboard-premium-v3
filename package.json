@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "chokidar": "^5.0.0",
+    "express": "^5.2.1",
+    "telegraf": "^4.16.3"
+  }
+}

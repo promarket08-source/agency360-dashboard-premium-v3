@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+*.md
+.env
+.DS_Store
+coverage
+.vscode
+.idea
+*.log
+tmp/
+temp/
+archive/
+agency-hub/node_modules/
+agency-hub/.git/
