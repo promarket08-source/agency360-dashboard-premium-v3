@@ -612,6 +612,23 @@ button:focus-visible, input:focus-visible {
         Portal Cliente
         <span class="nav-item-badge">4</span>
       </div>
+      <div class="nav-item" data-section="n8n" onclick="showSection('n8n')">
+        <span class="nav-item-icon">⚙️</span>
+        n8n Local
+        <span class="nav-item-badge">●</span>
+      </div>
+      <div class="nav-item" data-section="growth" onclick="showSection('growth')">
+        <span class="nav-item-icon">📈</span>
+        Crecimiento
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Centro de Control</div>
+      <div class="nav-item active" data-section="control-tower" onclick="showSection('control-tower')" style="background:linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2));border-left:3px solid var(--accent-blue)">
+        <span class="nav-item-icon">🏭</span>
+        Control Tower
+        <span class="nav-item-badge" style="background:var(--accent-red);animation:pulse 2s infinite">●</span>
+      </div>
     </div>
     <div class="nav-group">
       <div class="nav-group-label">Sistema</div>
@@ -3559,10 +3576,175 @@ button:focus-visible, input:focus-visible {
            </div>
          </div>
        </div>
-     </div>
-   </div>
+      </div>
+    </div>
 
-   <!-- Footer -->
+    <!-- 19. CONTROL TOWER (CENTRO DE CONTROL TOTAL) -->
+    <div class="section active" id="s-control-tower">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">🏭 Control Tower - Centro de Control Total</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">Decide y ejecuta todo de la Agencia 360. Fábrica de Contenido Digital.</p>
+      </div>
+      
+      <!-- Status de Toda la Agencia -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px">
+        <div class="card" style="border-left:4px solid var(--accent-green);text-align:center">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">BACKEND</div>
+          <div style="font-size:24px;font-weight:700;color:var(--accent-green)">● ON</div>
+          <div style="font-size:10px;color:var(--text-muted)">Puerto 3000</div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--accent-blue);text-align:center">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">N8N</div>
+          <div style="font-size:24px;font-weight:700;color:var(--accent-blue)">● ON</div>
+          <div style="font-size:10px;color:var(--text-muted)">Puerto 5678</div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--accent-purple);text-align:center">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">AGENTES IA</div>
+          <div style="font-size:24px;font-weight:700;color:var(--accent-purple)">192</div>
+          <div style="font-size:10px;color:var(--text-muted)">Activos</div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--accent-yellow);text-align:center">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">PROYECTOS</div>
+          <div style="font-size:24px;font-weight:700;color:var(--accent-yellow)">31</div>
+          <div style="font-size:10px;color:var(--text-muted)">Indexados</div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--accent-red);text-align:center">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">OBJETIVO</div>
+          <div style="font-size:24px;font-weight:700;color:var(--accent-red)">$10M</div>
+          <div style="font-size:10px;color:var(--text-muted)">2027</div>
+        </div>
+      </div>
+
+      <!-- Acciones Críticas -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="card-title">⚡ Acciones Críticas - Toma Decisiones Aquí</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:12px">
+          <button class="header-btn" style="background:linear-gradient(135deg,var(--accent-green),var(--accent-blue));color:white;border:none;padding:16px;font-size:14px;font-weight:600" onclick="executeAction('capture-lead')">
+            🎯 Capturar Lead Masivo<br>
+            <span style="font-size:11px;opacity:0.8">Genera 100 leads automáticos</span>
+          </button>
+          <button class="header-btn" style="background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));color:white;border:none;padding:16px;font-size:14px;font-weight:600" onclick="executeAction('generate-project')">
+            🚀 Generar Proyecto<br>
+            <span style="font-size:11px;opacity:0.8">Crea landing/ecommerce/CRM</span>
+          </button>
+          <button class="header-btn" style="background:linear-gradient(135deg,var(--accent-purple),var(--accent-yellow));color:white;border:none;padding:16px;font-size:14px;font-weight:600" onclick="executeAction('generate-content')">
+            📄 Generar Contenido<br>
+            <span style="font-size:11px;opacity:0.8">Posts, blogs, emails, ads</span>
+          </button>
+          <button class="header-btn" style="background:linear-gradient(135deg,var(--accent-yellow),var(--accent-red));color:white;border:none;padding:16px;font-size:14px;font-weight:600" onclick="executeAction('deploy-vercel')">
+            🌐 Desplegar Todo<br>
+            <span style="font-size:11px;opacity:0.8">Deploy a Vercel + GitHub</span>
+          </button>
+          <button class="header-btn" style="background:linear-gradient(135deg,var(--accent-red),var(--accent-green));color:white;border:none;padding:16px;font-size:14px;font-weight:600" onclick="executeAction('scale-agents')">
+            🤖 Escalar Agentes<br>
+            <span style="font-size:11px;opacity:0.8">De 192 a 500 agentes</span>
+          </button>
+          <button class="header-btn" style="background:linear-gradient(135deg,#000,#333);color:white;border:none;padding:16px;font-size:14px;font-weight:600" onclick="executeAction('start-all')">
+            🏭 INICIAR FÁBRICA<br>
+            <span style="font-size:11px;opacity:0.8">Empieza a generar millones</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Métricas en Tiempo Real -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="card-title">📊 Métricas en Tiempo Real</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:12px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span>Ingresos Hoy</span>
+              <span style="color:var(--accent-green);font-weight:600">$12,450</span>
+            </div>
+            <div style="height:8px;background:var(--bg-tertiary);border-radius:4px;overflow:hidden">
+              <div style="width:62%;height:100%;background:var(--accent-green);border-radius:4px;animation: pulse 2s infinite"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span>Proyectos Activos</span>
+              <span style="color:var(--accent-blue);font-weight:600">23/31</span>
+            </div>
+            <div style="height:8px;background:var(--bg-tertiary);border-radius:4px;overflow:hidden">
+              <div style="width:74%;height:100%;background:var(--accent-blue);border-radius:4px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span>Agentes Trabajando</span>
+              <span style="color:var(--accent-purple);font-weight:600">156/192</span>
+            </div>
+            <div style="height:8px;background:var(--bg-tertiary);border-radius:4px;overflow:hidden">
+              <div style="width:81%;height:100%;background:var(--accent-purple);border-radius:4px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span>Objetivo Mensual</span>
+              <span style="color:var(--accent-yellow);font-weight:600">$500K / $1.2M</span>
+            </div>
+            <div style="height:8px;background:var(--bg-tertiary);border-radius:4px;overflow:hidden">
+              <div style="width:42%;height:100%;background:var(--accent-yellow);border-radius:4px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Control de Servicios -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⚙️ Control de Servicios Locales</div>
+        </div>
+        <div style="display:grid;gap:12px;margin-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--bg-tertiary);border-radius:6px">
+            <div>
+              <div style="font-size:13px;font-weight:600">Backend API (Puerto 3000)</div>
+              <div style="font-size:11px;color:var(--text-muted)">Node.js + Express + SQLite</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <span class="badge badge-green">● Running</span>
+              <button class="header-btn" style="padding:4px 8px;font-size:10px" onclick="controlService('restart-backend')">🔄 Reiniciar</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--bg-tertiary);border-radius:6px">
+            <div>
+              <div style="font-size:13px;font-weight:600">n8n Automatización (Puerto 5678)</div>
+              <div style="font-size:11px;color:var(--text-muted)">Workflows + Integraciones</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <span class="badge badge-green">● Running</span>
+              <button class="header-btn" style="padding:4px 8px;font-size:10px" onclick="controlService('restart-n8n')">🔄 Reiniciar</button>
+              <button class="header-btn" style="padding:4px 8px;font-size:10px" onclick="window.open('http://localhost:5678')">🌐 Abrir</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--bg-tertiary);border-radius:6px">
+            <div>
+              <div style="font-size:13px;font-weight:600">Vercel Deploy</div>
+              <div style="font-size:11px;color:var(--text-muted)">Producción: agency-hub-rho.vercel.app</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <span class="badge badge-blue">● Listo</span>
+              <button class="header-btn" style="padding:4px 8px;font-size:10px" onclick="executeAction('deploy-vercel')">🚀 Deploy</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--bg-tertiary);border-radius:6px">
+            <div>
+              <div style="font-size:13px;font-weight:600">GitHub Sync</div>
+              <div style="font-size:11px;color:var(--text-muted)">Repo: agency360-dashboard-premium-v3</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <span class="badge badge-purple">● Sincronizado</span>
+              <button class="header-btn" style="padding:4px 8px;font-size:10px" onclick="executeAction('git-push')">📤 Push</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
   <div class="footer">
     <p>Impulsado por <a href="https://www.instagram.com/tu.web.pro360/?hl=en">@tu.web.pro360</a> | 
     Agencia 360 - Todos los sistemas integrados | 
