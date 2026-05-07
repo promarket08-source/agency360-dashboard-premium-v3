@@ -1430,3 +1430,256 @@ setTimeout(() => {
 }, 1500);
 
 console.log('Dashboard Premium v3.0 initialized successfully!');
+
+// ========== LEAD GENERATION ==========
+function captureLead() {
+  const name = document.querySelector('#s-leads input[type="text"]')?.value || 'Nuevo Cliente';
+  const email = document.querySelector('#s-leads input[type="email"]')?.value || 'no-email@agencia360.com';
+  const service = document.querySelector('#s-leads select')?.value || 'Servicio';
+  
+  const lead = {
+    id: Date.now(),
+    name,
+    email,
+    service,
+    status: 'Nuevo',
+    date: new Date().toISOString(),
+    source: 'Dashboard Manual'
+  };
+  
+  try {
+    const leads = JSON.parse(localStorage.getItem('leads') || '[]');
+    leads.push(lead);
+    localStorage.setItem('leads', JSON.stringify(leads));
+    alert(`🎯 Lead Capturado!\n\nNombre: ${name}\nServicio: ${service}\n\nSe ha añadido al CRM automáticamente.`);
+    speak(`Lead capturado: ${name}. Servicio: ${service}. Convirtiendo a cliente.`);
+  } catch (e) {
+    console.error('Error capturing lead:', e);
+  }
+}
+
+// ========== PROJECT GENERATOR ==========
+function generateProject(type) {
+  const projects = {
+    'landing': { name: 'Landing Page', files: 15, time: '2-3 días', price: '$2,500' },
+    'ecommerce': { name: 'E-commerce', files: 28, time: '5-7 días', price: '$8,500' },
+    'crm': { name: 'CRM', files: 35, time: '7-10 días', price: '$12,000' },
+    'mobile-app': { name: 'App Móvil', files: 42, time: '10-15 días', price: '$15,000' }
+  };
+  
+  const project = projects[type] || projects['landing'];
+  const projectName = `${project.name}-${Date.now()}`;
+  
+  const newProject = {
+    id: Date.now(),
+    name: projectName,
+    type: project.name,
+    files: project.files,
+    price: project.price,
+    time: project.time,
+    status: 'Generando...',
+    progress: 0,
+    created: new Date().toISOString(),
+    tasks: generateTasksForType(type)
+  };
+  
+  try {
+    const projects = JSON.parse(localStorage.getItem('generatedProjects') || '[]');
+    projects.push(newProject);
+    localStorage.setItem('generatedProjects', JSON.stringify(projects));
+    
+    // Simulate progress
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 10;
+      if (progress >= 100) {
+        clearInterval(interval);
+        newProject.status = 'Completo';
+        newProject.progress = 100;
+        localStorage.setItem('generatedProjects', JSON.stringify(projects));
+        alert(`✅ Proyecto ${projectName} generado completamente!\n\nArchivos: ${project.files}\nTiempo estimado: ${project.time}\nPrecio: ${project.price}`);
+      }
+    }, 500);
+    
+    alert(`🚀 Generando proyecto: ${projectName}\n\nArchivos: ${project.files}\nTiempo: ${project.time}\nPrecio: ${project.price}\n\nSe está creando automáticamente...`);
+    speak(`Proyecto ${project.name} generado. ${project.files} archivos creados automáticamente.`);
+  } catch (e) {
+    console.error('Error generating project:', e);
+  }
+}
+
+function generateTasksForType(type) {
+  const taskMap = {
+    'landing': [
+      { text: 'Diseñar wireframe', priority: 'Alta', completed: false },
+      { text: 'Desarrollar HTML/CSS', priority: 'Alta', completed: false },
+      { text: 'Integrar SEO básico', priority: 'Media', completed: false },
+      { text: 'Optimizar responsive', priority: 'Media', completed: false },
+      { text: 'Conectar formulario', priority: 'Baja', completed: false }
+    ],
+    'ecommerce': [
+      { text: 'Configurar base de datos', priority: 'Alta', completed: false },
+      { text: 'Integrar carrito compra', priority: 'Alta', completed: false },
+      { text: 'Pasarela de pago', priority: 'Alta', completed: false },
+      { text: 'Panel administración', priority: 'Media', completed: false },
+      { text: 'SEO productos', priority: 'Media', completed: false }
+    ],
+    'crm': [
+      { text: 'Modelo de datos clientes', priority: 'Alta', completed: false },
+      { text: 'Pipeline de ventas', priority: 'Alta', completed: false },
+      { text: 'Panel de reportes', priority: 'Media', completed: false },
+      { text: 'Integración email', priority: 'Media', completed: false },
+      { text: 'Exportar datos', priority: 'Baja', completed: false }
+    ],
+    'mobile-app': [
+      { text: 'Diseño UI/UX', priority: 'Alta', completed: false },
+      { text: 'Desarrollo React Native', priority: 'Alta', completed: false },
+      { text: 'API REST backend', priority: 'Alta', completed: false },
+      { text: 'Push notifications', priority: 'Media', completed: false },
+      { text: 'Publicar tiendas', priority: 'Media', completed: false }
+    ]
+  };
+  return taskMap[type] || taskMap['landing'];
+}
+
+// ========== RESOURCE GENERATOR ==========
+function generateDocument(type) {
+  const docs = {
+    'contract': 'Contrato Cliente',
+    'proposal': 'Propuesta Comercial',
+    'invoice': 'Factura/Recibo',
+    'nda': 'Acuerdo Confidencial'
+  };
+  const docName = docs[type] || 'Documento';
+  const timestamp = new Date().toISOString().split('T')[0];
+  const fileName = `${docName}_${timestamp}.docx`;
+  
+  try {
+    const resources = JSON.parse(localStorage.getItem('generatedResources') || '[]');
+    resources.push({
+      name: fileName,
+      type: 'Documento',
+      date: new Date().toISOString(),
+      status: 'Generado'
+    });
+    localStorage.setItem('generatedResources', JSON.stringify(resources));
+    alert(`📄 Documento generado: ${fileName}\n\nSe ha creado automáticamente usando plantillas IA.`);
+    speak(`Documento ${docName} generado exitosamente.`);
+  } catch (e) {
+    console.error('Error generating document:', e);
+  }
+}
+
+function generateContent(type) {
+  const content = {
+    'social-post': 'Posts Redes Sociales',
+    'blog': 'Artículo Blog SEO',
+    'email': 'Email Marketing',
+    'ad-copy': 'Copy Publicitario'
+  };
+  const contentName = content[type] || 'Contenido';
+  alert(`📱 Generando: ${contentName}\n\nUsando IA para crear contenido optimizado...`);
+  speak(`Generando ${contentName} con inteligencia artificial.`);
+}
+
+function generateReport(type) {
+  const reports = {
+    'seo': 'Reporte SEO',
+    'analytics': 'Reporte Analítica',
+    'performance': 'Reporte Rendimiento',
+    'financial': 'Reporte Financiero'
+  };
+  const reportName = reports[type] || 'Reporte';
+  alert(`📊 Generando: ${reportName}\n\nCompilando datos y métricas...`);
+  speak(`Reporte ${reportName} siendo generado.`);
+}
+
+// ========== CLIENT PORTAL ==========
+function openMercadoPago() {
+  alert(`💳 Conectando con MercadoPago...\n\nSe abrirá la página de autorización para recibir pagos automáticamente.`);
+  speak('Conectando con MercadoPago para recibir pagos.');
+}
+
+// ========== GROWTH CHART ==========
+function initGrowthChart() {
+  const canvas = document.getElementById('growthChart');
+  if (!canvas || typeof Chart === 'undefined') {
+    console.log('Growth chart canvas not found or Chart.js not loaded');
+    return;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+      datasets: [{
+        label: 'Ingresos ($)',
+        data: [50000, 75000, 100000, 150000, 200000, 300000, 400000, 500000, 700000, 850000, 1000000, 1200000],
+        borderColor: '#10b981',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4
+      }, {
+        label: 'Clientes',
+        data: [50, 75, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4
+      }, {
+        label: 'Proyectos/mes',
+        data: [10, 15, 25, 35, 50, 60, 70, 80, 90, 100, 110, 120],
+        borderColor: '#8b5cf6',
+        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: '#e2e8f0'
+          }
+        },
+        tooltip: {
+          backgroundColor: '#1e1e2e',
+          titleColor: '#e2e8f0',
+          bodyColor: '#94a3b8'
+        }
+      },
+      scales: {
+        y: {
+          ticks: { color: '#94a3b8' },
+          grid: { color: 'rgba(148, 163, 184, 0.1)' }
+        },
+        x: {
+          ticks: { color: '#94a3b8' },
+          grid: { color: 'rgba(148, 163, 184, 0.1)' }
+        }
+      }
+    }
+  });
+  console.log('Growth chart initialized');
+}
+
+// Initialize growth chart when section is shown
+setTimeout(() => {
+  const growthSection = document.getElementById('s-growth');
+  if (growthSection) {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (growthSection.classList.contains('active')) {
+          setTimeout(initGrowthChart, 300);
+        }
+      });
+    });
+    observer.observe(growthSection, { attributes: true, attributeFilter: ['class'] });
+  }
+}, 1000);

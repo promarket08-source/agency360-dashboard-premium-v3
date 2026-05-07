@@ -592,6 +592,28 @@ button:focus-visible, input:focus-visible {
       </div>
     </div>
     <div class="nav-group">
+      <div class="nav-group-label">Agencia 360</div>
+      <div class="nav-item" data-section="leads" onclick="showSection('leads')">
+        <span class="nav-item-icon">🎯</span>
+        Lead Gen
+        <span class="nav-item-badge">8</span>
+      </div>
+      <div class="nav-item" data-section="generator" onclick="showSection('generator')">
+        <span class="nav-item-icon">🚀</span>
+        Generador
+        <span class="nav-item-badge">3</span>
+      </div>
+      <div class="nav-item" data-section="resources-gen" onclick="showSection('resources-gen')">
+        <span class="nav-item-icon">📄</span>
+        Recursos IA
+      </div>
+      <div class="nav-item" data-section="client-portal" onclick="showSection('client-portal')">
+        <span class="nav-item-icon">👥</span>
+        Portal Cliente
+        <span class="nav-item-badge">4</span>
+      </div>
+    </div>
+    <div class="nav-group">
       <div class="nav-group-label">Sistema</div>
       <div class="nav-item" data-section="projects" onclick="showSection('projects')">
         <span class="nav-item-icon">📁</span>
@@ -3093,11 +3115,454 @@ button:focus-visible, input:focus-visible {
             📋 Control Panel<br><span style="font-size:10px;color:var(--text-muted)">12 secciones</span>
           </a>
         </div>
-      </div>
-    </div>
-  </div>
+       </div>
+     </div>
 
-  <!-- Footer -->
+     <!-- 13. LEAD GEN -->
+     <div class="section" id="s-leads">
+       <div style="margin-bottom:24px">
+         <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">🎯 Lead Generation</h1>
+         <p style="font-size:13px;color:var(--text-secondary)">Capta clientes automáticamente y conviértelos en ventas</p>
+       </div>
+       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px">
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">📊 KPIs de Captación</div>
+           </div>
+           <div style="display:flex;flex-direction:column;gap:12px">
+             <div style="display:flex;justify-content:space-between;align-items:center">
+               <span style="font-size:13px">Leads este mes</span>
+               <span style="font-size:20px;font-weight:700;color:var(--accent-green)">127</span>
+             </div>
+             <div style="display:flex;justify-content:space-between;align-items:center">
+               <span style="font-size:13px">Tasa conversión</span>
+               <span style="font-size:20px;font-weight:700;color:var(--accent-blue)">23%</span>
+             </div>
+             <div style="display:flex;justify-content:space-between;align-items:center">
+               <span style="font-size:13px">Clientes nuevos</span>
+               <span style="font-size:20px;font-weight:700;color:var(--accent-purple)">29</span>
+             </div>
+           </div>
+         </div>
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">🎯 Formulario Inteligente</div>
+           </div>
+           <div style="display:flex;flex-direction:column;gap:8px">
+             <input type="text" placeholder="Nombre del cliente" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary)">
+             <input type="email" placeholder="Email" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary)">
+             <select style="padding:8px;border-radius:6px;border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary)">
+               <option>Servicio requerido</option>
+               <option>Landing Page</option>
+               <option>E-commerce</option>
+               <option>CRM</option>
+               <option>App Móvil</option>
+               <option>Automatización</option>
+             </select>
+             <button class="header-btn" style="background:var(--accent-green);color:white;border:none;padding:10px" onclick="captureLead()">🚀 Capturar Lead</button>
+           </div>
+         </div>
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">🔄 Flujo Automatizado</div>
+           </div>
+           <div style="font-size:11px;color:var(--text-secondary)">
+             <div style="padding:6px 0;border-bottom:1px solid var(--border)">1. Lead llega → Notificación Slack</div>
+             <div style="padding:6px 0;border-bottom:1px solid var(--border)">2. Email automático de bienvenida</div>
+             <div style="padding:6px 0;border-bottom:1px solid var(--border)">3. CRM actualizado</div>
+             <div style="padding:6px 0;">4. Asignar agente IA</div>
+           </div>
+         </div>
+       </div>
+       <div class="card">
+         <div class="card-header">
+           <div class="card-title">📋 Leads Recientes</div>
+         </div>
+         <div style="overflow-x:auto">
+           <table style="width:100%;font-size:12px;border-collapse:collapse">
+             <thead>
+               <tr style="border-bottom:2px solid var(--border)">
+                 <th style="text-align:left;padding:8px">Nombre</th>
+                 <th style="text-align:left;padding:8px">Servicio</th>
+                 <th style="text-align:left;padding:8px">Estado</th>
+                 <th style="text-align:left;padding:8px">Acción</th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr style="border-bottom:1px solid var(--border)">
+                 <td style="padding:8px">María García</td>
+                 <td style="padding:8px">E-commerce</td>
+                 <td style="padding:8px"><span class="badge badge-yellow">Nuevo</span></td>
+                 <td style="padding:8px"><button class="header-btn" style="padding:4px 8px;font-size:10px">Convertir</button></td>
+               </tr>
+               <tr style="border-bottom:1px solid var(--border)">
+                 <td style="padding:8px">Carlos López</td>
+                 <td style="padding:8px">Landing Page</td>
+                 <td style="padding:8px"><span class="badge badge-blue">Contactado</span></td>
+                 <td style="padding:8px"><button class="header-btn" style="padding:4px 8px;font-size:10px">Seguir</button></td>
+               </tr>
+               <tr>
+                 <td style="padding:8px">Ana Martínez</td>
+                 <td style="padding:8px">CRM</td>
+                 <td style="padding:8px"><span class="badge badge-green">Convertido</span></td>
+                 <td style="padding:8px"><button class="header-btn" style="padding:4px 8px;font-size:10px">Ver Proyecto</button></td>
+               </tr>
+             </tbody>
+           </table>
+         </div>
+       </div>
+     </div>
+
+     <!-- 14. GENERADOR DE PROYECTOS -->
+     <div class="section" id="s-generator">
+       <div style="margin-bottom:24px">
+         <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">🚀 Generador de Proyectos</h1>
+         <p style="font-size:13px;color:var(--text-secondary)">Crea proyectos completos automáticamente con un clic</p>
+       </div>
+       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-bottom:24px">
+         <div class="card" style="cursor:pointer;border:2px solid var(--accent-blue)" onclick="generateProject('landing')">
+           <div style="text-align:center;padding:20px">
+             <div style="font-size:48px;margin-bottom:12px">🎨</div>
+             <div style="font-size:16px;font-weight:600;margin-bottom:8px">Landing Page</div>
+             <div style="font-size:11px;color:var(--text-muted)">HTML/CSS/JS + SEO + Responsive</div>
+           </div>
+         </div>
+         <div class="card" style="cursor:pointer;border:2px solid var(--accent-green)" onclick="generateProject('ecommerce')">
+           <div style="text-align:center;padding:20px">
+             <div style="font-size:48px;margin-bottom:12px">🛒</div>
+             <div style="font-size:16px;font-weight:600;margin-bottom:8px">E-commerce</div>
+             <div style="font-size:11px;color:var(--text-muted)">Carrito + Pasarela + Admin</div>
+           </div>
+         </div>
+         <div class="card" style="cursor:pointer;border:2px solid var(--accent-purple)" onclick="generateProject('crm')">
+           <div style="text-align:center;padding:20px">
+             <div style="font-size:48px;margin-bottom:12px">👥</div>
+             <div style="font-size:16px;font-weight:600;margin-bottom:8px">CRM</div>
+             <div style="font-size:11px;color:var(--text-muted)">Gestión clientes + Pipeline</div>
+           </div>
+         </div>
+         <div class="card" style="cursor:pointer;border:2px solid var(--accent-yellow)" onclick="generateProject('mobile-app')">
+           <div style="text-align:center;padding:20px">
+             <div style="font-size:48px;margin-bottom:12px">📱</div>
+             <div style="font-size:16px;font-weight:600;margin-bottom:8px">App Móvil</div>
+             <div style="font-size:11px;color:var(--text-muted)">React Native + API</div>
+           </div>
+         </div>
+       </div>
+       <div class="card">
+         <div class="card-header">
+           <div class="card-title">⚡ Proyectos Recientes Generados</div>
+         </div>
+         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px">
+           <div style="background:var(--bg-tertiary);border-radius:8px;padding:12px">
+             <div style="font-size:13px;font-weight:600;color:var(--accent-blue)">Landing-Biocuantum-v2</div>
+             <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Generado: 2026-05-07 | Archivos: 15</div>
+             <div style="margin-top:8px">
+               <span class="badge badge-green">✓ Completo</span>
+             </div>
+           </div>
+           <div style="background:var(--bg-tertiary);border-radius:8px;padding:12px">
+             <div style="font-size:13px;font-weight:600;color:var(--accent-green)">Ecommerce-Antonella</div>
+             <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Generado: 2026-05-06 | Archivos: 28</div>
+             <div style="margin-top:8px">
+               <span class="badge badge-blue">⚙ En progreso</span>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+
+     <!-- 15. GENERADOR DE RECURSOS IA -->
+     <div class="section" id="s-resources-gen">
+       <div style="margin-bottom:24px">
+         <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">📄 Generador de Recursos IA</h1>
+         <p style="font-size:13px;color:var(--text-secondary)">Genera documentos, contratos, propuestas y más automáticamente</p>
+       </div>
+       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px">
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">📝 Generador de Documentos</div>
+           </div>
+           <div style="display:flex;flex-direction:column;gap:8px">
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateDocument('contract')">📄 Contrato Cliente</button>
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateDocument('proposal')">📋 Propuesta Comercial</button>
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateDocument('invoice')">💰 Factura/Recibo</button>
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateDocument('nda')">🔒 Acuerdo Confidencial</button>
+           </div>
+         </div>
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">📱 Generador de Contenido</div>
+           </div>
+           <div style="display:flex;flex-direction:column;gap:8px">
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateContent('social-post')">🌐 Posts Redes Sociales</button>
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateContent('blog')">📰 Artículo Blog SEO</button>
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateContent('email')">📧 Email Marketing</button>
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateContent('ad-copy')">🎯 Copy Publicitario</button>
+           </div>
+         </div>
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">📊 Generador de Reportes</div>
+           </div>
+           <div style="display:flex;flex-direction:column;gap:8px">
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateReport('seo')">🔍 Reporte SEO</button>
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateReport('analytics')">📈 Reporte Analítica</button>
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateReport('performance')">⚡ Reporte Rendimiento</button>
+             <button class="header-btn" style="justify-content:flex-start" onclick="generateReport('financial')">💳 Reporte Financiero</button>
+           </div>
+         </div>
+       </div>
+       <div class="card">
+         <div class="card-header">
+           <div class="card-title">🎯 Recursos Generados Hoy</div>
+         </div>
+         <div style="font-size:12px;color:var(--text-secondary)">
+           <div style="padding:8px 0;border-bottom:1px solid var(--border)">✅ Contrato_Biocuantum_2026-05-07.docx - 12:30 PM</div>
+           <div style="padding:8px 0;border-bottom:1px solid var(--border)">✅ Propuesta_Burbuja_2026-05-07.docx - 11:45 AM</div>
+           <div style="padding:8px 0;">✅ Posts_Instagram_3x - 10:20 AM</div>
+         </div>
+       </div>
+     </div>
+
+     <!-- 16. PORTAL DEL CLIENTE -->
+     <div class="section" id="s-client-portal">
+       <div style="margin-bottom:24px">
+         <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">👥 Portal del Cliente</h1>
+         <p style="font-size:13px;color:var(--text-secondary)">Tus clientes ven progreso, aprueban tareas y pagan facturas</p>
+       </div>
+       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px">
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">🔐 Acceso Clientes (4 activos)</div>
+           </div>
+           <div style="display:flex;flex-direction:column;gap:8px">
+             <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
+               <span style="font-size:12px">Biocuantum</span>
+               <span class="badge badge-green">● Online</span>
+             </div>
+             <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
+               <span style="font-size:12px">Burbuja</span>
+               <span class="badge badge-green">● Online</span>
+             </div>
+             <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
+               <span style="font-size:12px">Calzados Antonella</span>
+               <span class="badge badge-yellow">○ Espera</span>
+             </div>
+             <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+               <span style="font-size:12px">Chocados Herrera</span>
+               <span class="badge badge-green">● Online</span>
+             </div>
+           </div>
+         </div>
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">💳 Facturación y Pagos</div>
+           </div>
+           <div style="display:flex;flex-direction:column;gap:12px">
+             <div style="display:flex;justify-content:space-between;align-items:center">
+               <span style="font-size:13px">Pendientes</span>
+               <span style="font-size:20px;font-weight:700;color:var(--accent-red)">$12,450</span>
+             </div>
+             <div style="display:flex;justify-content:space-between;align-items:center">
+               <span style="font-size:13px">Pagadas este mes</span>
+               <span style="font-size:20px;font-weight:700;color:var(--accent-green)">$87,300</span>
+             </div>
+             <button class="header-btn" style="background:var(--accent-blue);color:white;border:none;padding:10px" onclick="openMercadoPago()">💰 Conectar MercadoPago</button>
+           </div>
+         </div>
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">📊 Satisfacción Cliente</div>
+           </div>
+           <div style="display:flex;flex-direction:column;gap:12px">
+             <div>
+               <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                 <span>Calidad entregable</span>
+                 <span>4.8/5</span>
+               </div>
+               <div style="height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                 <div style="width:96%;height:100%;background:var(--accent-green);border-radius:3px"></div>
+               </div>
+             </div>
+             <div>
+               <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                 <span>Tiempo entrega</span>
+                 <span>4.5/5</span>
+               </div>
+               <div style="height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                 <div style="width:90%;height:100%;background:var(--accent-blue);border-radius:3px"></div>
+               </div>
+             </div>
+             <div>
+               <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                 <span>Comunicación</span>
+                 <span>4.9/5</span>
+               </div>
+               <div style="height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                 <div style="width:98%;height:100%;background:var(--accent-purple);border-radius:3px"></div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+       <div class="card">
+         <div class="card-header">
+           <div class="card-title">🔗 Enlaces Portal Cliente</div>
+         </div>
+         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+           <a href="http://localhost:3000/client-portal.html" style="padding:8px;background:var(--bg-tertiary);border-radius:6px;color:var(--accent-blue);text-decoration:none;font-size:11px;text-align:center">🌐 Portal Biocuantum</a>
+           <a href="http://localhost:3000/client-portal.html" style="padding:8px;background:var(--bg-tertiary);border-radius:6px;color:var(--accent-green);text-decoration:none;font-size:11px;text-align:center">🌐 Portal Burbuja</a>
+           <a href="http://localhost:3000/client-portal.html" style="padding:8px;background:var(--bg-tertiary);border-radius:6px;color:var(--accent-yellow);text-decoration:none;font-size:11px;text-align:center">🌐 Portal Antonella</a>
+         </div>
+       </div>
+     </div>
+
+     <!-- 17. N8N AUTOMATIZACIÓN LOCAL -->
+     <div class="section" id="s-n8n">
+       <div style="margin-bottom:24px">
+         <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">⚙️ n8n Automatización Local</h1>
+         <p style="font-size:13px;color:var(--text-secondary)">Orquesta flujos de trabajo, conecta APIs y automatiza toda la agencia</p>
+       </div>
+       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px">
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">🟢 Estado del Servidor</div>
+           </div>
+           <div style="display:flex;flex-direction:column;gap:12px">
+             <div style="display:flex;justify-content:space-between;align-items:center">
+               <span style="font-size:13px">n8n Local</span>
+               <span class="badge badge-green">● Running :5678</span>
+             </div>
+             <div style="display:flex;justify-content:space-between;align-items:center">
+               <span style="font-size:13px">Workflows activos</span>
+               <span style="font-size:20px;font-weight:700;color:var(--accent-blue)">12</span>
+             </div>
+             <div style="display:flex;justify-content:space-between;align-items:center">
+               <span style="font-size:13px">Ejecuciones hoy</span>
+               <span style="font-size:20px;font-weight:700;color:var(--accent-green)">347</span>
+             </div>
+             <a href="http://localhost:5678" target="_blank" style="background:var(--accent-blue);color:white;text-decoration:none;text-align:center;padding:10px;border-radius:6px;font-size:12px">🚀 Abrir n8n Dashboard</a>
+           </div>
+         </div>
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">🔗 Integraciones Activas</div>
+           </div>
+           <div style="display:flex;flex-wrap:wrap;gap:6px">
+             <span class="badge badge-blue">Gmail</span>
+             <span class="badge badge-green">Slack</span>
+             <span class="badge badge-yellow">Instagram</span>
+             <span class="badge badge-purple">MercadoPago</span>
+             <span class="badge badge-red">GitHub</span>
+             <span class="badge">Vercel</span>
+             <span class="badge badge-blue">Google Sheets</span>
+             <span class="badge badge-green">WhatsApp</span>
+           </div>
+         </div>
+         <div class="card">
+           <div class="card-header">
+             <div class="card-title">📊 Workflows Recientes</div>
+           </div>
+           <div style="font-size:11px;color:var(--text-secondary)">
+             <div style="padding:6px 0;border-bottom:1px solid var(--border)">✅ Lead capture → CRM update</div>
+             <div style="padding:6px 0;border-bottom:1px solid var(--border)">✅ New project → Deploy Vercel</div>
+             <div style="padding:6px 0;border-bottom:1px solid var(--border)">✅ Invoice paid → Notify Slack</div>
+             <div style="padding:6px 0;">⚙️ Social media auto-post</div>
+           </div>
+         </div>
+       </div>
+       <div class="card">
+         <div class="card-header">
+           <div class="card-title">🖥️ n8n Dashboard Embebido</div>
+         </div>
+         <div style="border-radius:8px;overflow:hidden;margin-top:12px;height:500px;border:2px solid var(--border)">
+           <iframe src="http://localhost:5678" style="width:100%;height:100%;border:none"></iframe>
+         </div>
+       </div>
+     </div>
+
+     <!-- 18. PROYECCIÓN DE CRECIMIENTO -->
+     <div class="section" id="s-growth">
+       <div style="margin-bottom:24px">
+         <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">📈 Proyección de Crecimiento</h1>
+         <p style="font-size:13px;color:var(--text-secondary)">Escala tu agencia: proyecciones, objetivos y millones generados</p>
+       </div>
+       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-bottom:24px">
+         <div class="card" style="border-left:4px solid var(--accent-green)">
+           <div style="text-align:center">
+             <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">INGRESOS 2026</div>
+             <div style="font-size:36px;font-weight:700;color:var(--accent-green)">$1.2M</div>
+             <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Proyectado</div>
+           </div>
+         </div>
+         <div class="card" style="border-left:4px solid var(--accent-blue)">
+           <div style="text-align:center">
+             <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">CLIENTES ACTIVOS</div>
+             <div style="font-size:36px;font-weight:700;color:var(--accent-blue)">347</div>
+             <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Meta: 500</div>
+           </div>
+         </div>
+         <div class="card" style="border-left:4px solid var(--accent-purple)">
+           <div style="text-align:center">
+             <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">PROYECTOS/MES</div>
+             <div style="font-size:36px;font-weight:700;color:var(--accent-purple)">89</div>
+             <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Capacidad: 120</div>
+           </div>
+         </div>
+         <div class="card" style="border-left:4px solid var(--accent-yellow)">
+           <div style="text-align:center">
+             <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">AGENTES IA</div>
+             <div style="font-size:36px;font-weight:700;color:var(--accent-yellow)">192</div>
+             <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Escalando a 500</div>
+           </div>
+         </div>
+       </div>
+       <div class="card">
+         <div class="card-header">
+           <div class="card-title">📊 Gráfico de Crecimiento (Proyección 2026-2027)</div>
+         </div>
+         <canvas id="growthChart" style="width:100%;height:300px;margin-top:12px"></canvas>
+       </div>
+       <div class="card">
+         <div class="card-header">
+           <div class="card-title">🎯 Hitos de Escalabilidad</div>
+         </div>
+         <div style="display:grid;gap:12px;margin-top:12px">
+           <div style="display:flex;align-items:center;gap:12px">
+             <div style="width:40px;height:40px;background:var(--accent-green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700">✓</div>
+             <div>
+               <div style="font-size:13px;font-weight:600">$100K ingresos/mes</div>
+               <div style="font-size:11px;color:var(--text-muted)">Alcanzado Mayo 2026</div>
+             </div>
+           </div>
+           <div style="display:flex;align-items:center;gap:12px">
+             <div style="width:40px;height:40px;background:var(--accent-blue);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700">2</div>
+             <div>
+               <div style="font-size:13px;font-weight:600">$500K ingresos/mes</div>
+               <div style="font-size:11px;color:var(--text-muted)">Objetivo Agosto 2026</div>
+             </div>
+           </div>
+           <div style="display:flex;align-items:center;gap:12px">
+             <div style="width:40px;height:40px;background:var(--accent-purple);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700">3</div>
+             <div>
+               <div style="font-size:13px;font-weight:600">$1M ingresos/mes</div>
+               <div style="font-size:11px;color:var(--text-muted)">Objetivo Diciembre 2026</div>
+             </div>
+           </div>
+           <div style="display:flex;align-items:center;gap:12px">
+             <div style="width:40px;height:40px;background:var(--bg-tertiary);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-weight:700">4</div>
+             <div>
+               <div style="font-size:13px;font-weight:600">$10M valor empresa</div>
+               <div style="font-size:11px;color:var(--text-muted)">Objetivo 2027</div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   <!-- Footer -->
   <div class="footer">
     <p>Impulsado por <a href="https://www.instagram.com/tu.web.pro360/?hl=en">@tu.web.pro360</a> | 
     Agencia 360 - Todos los sistemas integrados | 
