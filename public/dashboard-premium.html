@@ -2397,9 +2397,27 @@ button:focus-visible, input:focus-visible {
         </div>
         <div style="overflow-x:auto">
           <table>
-            <thead>
+                <thead>
               <tr>
-                <th>Nombre</th><th>Etapa</th><th>Progreso</th><th>Archivos</th><th>JS</th><th>HTML</th><th>CSS</th><th>Fecha</th>
+                <th>Nombre</th><th>Etapa</th><th>Progreso</th><th>Archivos</th><th>JS</th><th>HTML</th><th>CSS</th><th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="projects-tbody">
+              <tr>
+                <td><a href="D:\AI_Agency\projects\clientes\biocuantum" style="color:var(--accent-blue);text-decoration:none"><strong>Biocuantum</strong></a></td>
+                <td><span class="badge badge-blue">Landing</span></td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                      <div style="height:100%;background:var(--accent-blue);width:92%"></div>
+                    </div>
+                    <span style="font-size:10px;color:var(--text-secondary)">92%</span>
+                  </div>
+                </td>
+                <td style="font-size:10px;color:var(--text-secondary)">48</td>
+                <td style="font-size:10px;color:var(--text-secondary)">12</td>
+                <td style="font-size:10px;color:var(--text-secondary)">8</td>
+                <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('Biocuantum')">📋 Seguir</button></td>
               </tr>
             </thead>
               <tbody id="projects-tbody">
@@ -2435,7 +2453,7 @@ button:focus-visible, input:focus-visible {
                   <td style="font-size:10px;color:var(--text-secondary)">10</td>
                   <td style="font-size:10px;color:var(--text-secondary)">6</td>
                   <td style="font-size:10px;color:var(--text-secondary)">4</td>
-                  <td style="font-size:10px;color:var(--text-secondary)">2026-03-10</td>
+                  <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('Burbuja')">📋 Seguir</button></td>
                 </tr>
                 <tr>
                   <td><a href="D:\AI_Agency\projects\clientes\cafe-huiti" style="color:var(--accent-blue);text-decoration:none"><strong>Café Huiti</strong></a></td>
@@ -2452,7 +2470,7 @@ button:focus-visible, input:focus-visible {
                   <td style="font-size:10px;color:var(--text-secondary)">3</td>
                   <td style="font-size:10px;color:var(--text-secondary)">2</td>
                   <td style="font-size:10px;color:var(--text-secondary)">1</td>
-                  <td style="font-size:10px;color:var(--text-secondary)">2026-05-05</td>
+                  <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('Café Huiti')">📋 Seguir</button></td>
                 </tr>
                 <tr>
                   <td><a href="D:\AI_Agency\projects\clientes\calistenia-app" style="color:var(--accent-blue);text-decoration:none"><strong>Calistenia App</strong></a></td>
@@ -2469,7 +2487,7 @@ button:focus-visible, input:focus-visible {
                   <td style="font-size:10px;color:var(--text-secondary)">8</td>
                   <td style="font-size:10px;color:var(--text-secondary)">5</td>
                   <td style="font-size:10px;color:var(--text-secondary)">3</td>
-                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-20</td>
+                  <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('Calistenia App')">📋 Seguir</button></td>
                 </tr>
                 <tr>
                   <td><a href="D:\AI_Agency\projects\clientes\calzados-antonella" style="color:var(--accent-blue);text-decoration:none"><strong>Calzados Antonella</strong></a></td>
@@ -2486,7 +2504,7 @@ button:focus-visible, input:focus-visible {
                   <td style="font-size:10px;color:var(--text-secondary)">9</td>
                   <td style="font-size:10px;color:var(--text-secondary)">7</td>
                   <td style="font-size:10px;color:var(--text-secondary)">5</td>
-                  <td style="font-size:10px;color:var(--text-secondary)">2026-03-20</td>
+                  <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('Calzados Antonella')">📋 Seguir</button></td>
                 </tr>
                 <tr>
                   <td><a href="D:\AI_Agency\projects\clientes\center full coleccion" style="color:var(--accent-blue);text-decoration:none"><strong>Center Full Colección</strong></a></td>
@@ -2503,7 +2521,7 @@ button:focus-visible, input:focus-visible {
                   <td style="font-size:10px;color:var(--text-secondary)">6</td>
                   <td style="font-size:10px;color:var(--text-secondary)">4</td>
                   <td style="font-size:10px;color:var(--text-secondary)">2</td>
-                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-28</td>
+                  <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('Center Full Colección')">📋 Seguir</button></td>
                 </tr>
                 <tr>
                   <td><a href="D:\AI_Agency\projects\clientes\chocados herrera" style="color:var(--accent-blue);text-decoration:none"><strong>Chocados Herrera</strong></a></td>
@@ -2520,7 +2538,7 @@ button:focus-visible, input:focus-visible {
                   <td style="font-size:10px;color:var(--text-secondary)">4</td>
                   <td style="font-size:10px;color:var(--text-secondary)">3</td>
                   <td style="font-size:10px;color:var(--text-secondary)">2</td>
-                  <td style="font-size:10px;color:var(--text-secondary)">2026-05-01</td>
+                  <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('Chocados Herrera')">📋 Seguir</button></td>
                 </tr>
                 <tr>
                   <td><a href="D:\AI_Agency\projects\clientes\clinica dental araucania" style="color:var(--accent-blue);text-decoration:none"><strong>Clínica Dental Araucanía</strong></a></td>
@@ -2537,7 +2555,7 @@ button:focus-visible, input:focus-visible {
                   <td style="font-size:10px;color:var(--text-secondary)">8</td>
                   <td style="font-size:10px;color:var(--text-secondary)">5</td>
                   <td style="font-size:10px;color:var(--text-secondary)">3</td>
-                  <td style="font-size:10px;color:var(--text-secondary)">2026-03-15</td>
+                  <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('Clínica Dental Araucanía')">📋 Seguir</button></td>
                 </tr>
                 <tr>
                   <td><a href="D:\AI_Agency\projects\clientes\de la cris empanadas" style="color:var(--accent-blue);text-decoration:none"><strong>De la Cris Empanadas</strong></a></td>
@@ -2554,7 +2572,7 @@ button:focus-visible, input:focus-visible {
                   <td style="font-size:10px;color:var(--text-secondary)">7</td>
                   <td style="font-size:10px;color:var(--text-secondary)">4</td>
                   <td style="font-size:10px;color:var(--text-secondary)">2</td>
-                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-10</td>
+                  <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('De la Cris Empanadas')">📋 Seguir</button></td>
                 </tr>
                 <tr>
                   <td><a href="D:\AI_Agency\projects\clientes\farmacia molco" style="color:var(--accent-blue);text-decoration:none"><strong>Farmacia Molco</strong></a></td>
@@ -2571,7 +2589,7 @@ button:focus-visible, input:focus-visible {
                   <td style="font-size:10px;color:var(--text-secondary)">11</td>
                   <td style="font-size:10px;color:var(--text-secondary)">8</td>
                   <td style="font-size:10px;color:var(--text-secondary)">6</td>
-                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-05</td>
+                  <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('Farmacia Molco')">📋 Seguir</button></td>
                 </tr>
                 <tr>
                   <td><a href="D:\AI_Agency\projects\clientes\floreria sol naciente" style="color:var(--accent-blue);text-decoration:none"><strong>Florería Sol Naciente</strong></a></td>
@@ -2588,7 +2606,7 @@ button:focus-visible, input:focus-visible {
                   <td style="font-size:10px;color:var(--text-secondary)">3</td>
                   <td style="font-size:10px;color:var(--text-secondary)">2</td>
                   <td style="font-size:10px;color:var(--text-secondary)">1</td>
-                  <td style="font-size:10px;color:var(--text-secondary)">2026-05-06</td>
+                  <td><button class="header-btn" style="padding:4px 8px;font-size:11px" onclick="followProject('Florería Sol Naciente')">📋 Seguir</button></td>
                 </tr>
                 <tr>
                   <td><a href="D:\AI_Agency\projects\clientes\gimnacios web" style="color:var(--accent-blue);text-decoration:none"><strong>Gimnasios Web</strong></a></td>

@@ -1,5 +1,260 @@
 // ========== DASHBOARD PREMIUM v3.0 - COMPLETE VERSION ==========
 
+// ========== PROJECT TASK MANAGEMENT ==========
+const PROJECT_TASKS = {
+  'Biocuantum': [
+    { id: 1, task: 'Completar integración CRM completo', priority: 'high', status: 'pending', category: 'CRM' },
+    { id: 2, task: 'Configurar webhooks MercadoPago', priority: 'high', status: 'pending', category: 'Payments' },
+    { id: 3, task: 'Optimizar velocidad de carga Landing Page', priority: 'medium', status: 'pending', category: 'Performance' },
+    { id: 4, task: 'Agregar sección testimonios', priority: 'low', status: 'pending', category: 'Content' },
+    { id: 5, task: 'Configurar Google Analytics 4', priority: 'medium', status: 'completed', category: 'Analytics' }
+  ],
+  'Burbuja': [
+    { id: 1, task: 'Crear versión mobile de Landing', priority: 'high', status: 'pending', category: 'Development' },
+    { id: 2, task: 'Integrar API OpenWeather para tours', priority: 'medium', status: 'pending', category: 'API' },
+    { id: 3, task: 'Subir a Vercel producción', priority: 'high', status: 'pending', category: 'Deployment' },
+    { id: 4, task: 'Configurar dominio personalizado', priority: 'medium', status: 'pending', category: 'Domain' },
+    { id: 5, task: 'SEO: Meta tags y structured data', priority: 'medium', status: 'completed', category: 'SEO' }
+  ],
+  'Calzados Antonella': [
+    { id: 1, task: 'Migrar a E-commerce completo', priority: 'high', status: 'pending', category: 'E-commerce' },
+    { id: 2, task: 'Configurar pasarela de pagos', priority: 'high', status: 'pending', category: 'Payments' },
+    { id: 3, task: 'Cargar catálogo de productos (150+)', priority: 'medium', status: 'pending', category: 'Content' },
+    { id: 4, task: 'Implementar carrito de compras', priority: 'high', status: 'completed', category: 'Development' }
+  ],
+  'Chocados Herrera': [
+    { id: 1, task: 'Rediseñar creativos Google Ads', priority: 'high', status: 'pending', category: 'Ads' },
+    { id: 2, task: 'Optimizar landing page (velocidad)', priority: 'high', status: 'pending', category: 'Performance' },
+    { id: 3, task: 'Bajar CPA de $45 a $30', priority: 'high', status: 'pending', category: 'Optimization' },
+    { id: 4, task: 'A/B testing en anuncios', priority: 'medium', status: 'pending', category: 'Testing' }
+  ],
+  'Tiempo Propiedades': [
+    { id: 1, task: 'Reactivar campañas (cliente inactivo)', priority: 'high', status: 'pending', category: 'Client' },
+    { id: 2, task: 'Actualizar fotos parcelas (HDR profesional)', priority: 'medium', status: 'pending', category: 'Content' },
+    { id: 3, task: 'Automatizar respuestas con n8n', priority: 'medium', status: 'pending', category: 'Automation' },
+    { id: 4, task: 'Crear chatbot para calificación de leads', priority: 'low', status: 'pending', category: 'AI' }
+  ],
+  'Clínica Dental Araucanía': [
+    { id: 1, task: 'Optimizar conversión Landing Page', priority: 'high', status: 'pending', category: 'CRO' },
+    { id: 2, task: 'Configurar Google My Business', priority: 'medium', status: 'pending', category: 'Local SEO' },
+    { id: 3, task: 'Integrar sistema de citas online', priority: 'high', status: 'pending', category: 'Booking' },
+    { id: 4, task: 'Crear campaña Google Ads (presupuesto $500)', priority: 'medium', status: 'completed', category: 'Ads' }
+  ]
+};
+
+// Generate tasks for projects that don't have them yet
+function generateDefaultTasks(projectName) {
+  return [
+    { id: 1, task: 'Revisar progreso general del proyecto', priority: 'medium', status: 'pending', category: 'General' },
+    { id: 2, task: 'Actualizar archivos .md de documentación', priority: 'low', status: 'pending', category: 'Docs' },
+    { id: 3, task: 'Verificar enlaces y funcionalidad', priority: 'high', status: 'pending', category: 'QA' },
+    { id: 4, task: 'Optimizar SEO básico', priority: 'medium', status: 'pending', category: 'SEO' }
+  ];
+}
+
+function followProject(projectName) {
+  if (!projectName) return;
+  
+  // Get or generate tasks
+  let tasks = PROJECT_TASKS[projectName];
+  if (!tasks) {
+    tasks = generateDefaultTasks(projectName);
+    PROJECT_TASKS[projectName] = tasks;
+  }
+  
+  // Save to localStorage
+  try {
+    const allTasks = JSON.parse(localStorage.getItem('projectTasks') || '{}');
+    allTasks[projectName] = tasks;
+    localStorage.setItem('projectTasks', JSON.stringify(allTasks));
+  } catch (e) {
+    console.error('Error saving tasks:', e);
+  }
+  
+  // Show task modal
+  showTaskModal(projectName, tasks);
+  
+  // Update project memory
+  updateProjectMemory(projectName, 'follow', { action: 'opened_task_modal' });
+}
+
+function showTaskModal(projectName, tasks) {
+  const pendingTasks = tasks.filter(t => t.status === 'pending');
+  const completedTasks = tasks.filter(t => t.status === 'completed');
+  
+  const modalHTML = `
+    <div id="taskModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:2000;display:flex;justify-content:center;align-items:center;backdrop-filter:blur(5px)">
+      <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <h2 style="font-size:20px;font-weight:700;color:var(--text-primary)">📋 Tareas: ${projectName}</h2>
+          <button onclick="closeTaskModal()" style="background:none;border:none;color:var(--text-muted);font-size:24px;cursor:pointer">&times;</button>
+        </div>
+        
+        <div style="margin-bottom:16px">
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <span class="badge badge-blue">${tasks.length} total</span>
+            <span class="badge badge-green">${completedTasks.length} completadas</span>
+            <span class="badge badge-yellow">${pendingTasks.length} pendientes</span>
+          </div>
+          <div style="height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${tasks.length > 0 ? (completedTasks.length/tasks.length * 100) : 0}%;background:var(--gradient-green);border-radius:3px;transition:var(--transition)"></div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom:20px">
+          <h3 style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:12px">Tareas Pendientes (${pendingTasks.length})</h3>
+          ${pendingTasks.map(task => `
+            <div id="task-${projectName}-${task.id}" style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;transition:var(--transition)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <span class="badge ${task.priority === 'high' ? 'badge-red' : task.priority === 'medium' ? 'badge-yellow' : 'badge-blue'}">${task.priority === 'high' ? '🔴 Alta' : task.priority === 'medium' ? '🟡 Media' : '🟢 Baja'}</span>
+                <span style="font-size:10px;color:var(--text-muted)">${task.category}</span>
+              </div>
+              <div style="font-size:13px;color:var(--text-primary);margin-bottom:8px">${task.task}</div>
+              <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button onclick="rejectTask('${projectName}', ${task.id})" style="padding:6px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);cursor:pointer;font-size:11px">❌ Rechazar</button>
+                <button onclick="approveTask('${projectName}', ${task.id})" style="padding:6px 12px;background:var(--gradient-green);border:none;border-radius:6px;color:white;cursor:pointer;font-size:11px;font-weight:600">✅ Aprobar</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        
+        <div style="margin-bottom:20px">
+          <h3 style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:12px">Completadas (${completedTasks.length})</h3>
+          ${completedTasks.map(task => `
+            <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;opacity:0.7">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="color:var(--accent-green)">✅</span>
+                <span style="font-size:13px;color:var(--text-secondary);text-decoration:line-through">${task.task}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border)">
+          <button onclick="suggestTasks('${projectName}')" style="padding:8px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);cursor:pointer;font-size:12px">💡 Sugerir Más</button>
+          <button onclick="closeTaskModal()" style="padding:8px 16px;background:var(--gradient-blue);border:none;border-radius:6px;color:white;cursor:pointer;font-size:12px;font-weight:600">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Remove existing modal if any
+  const existingModal = document.getElementById('taskModal');
+  if (existingModal) existingModal.remove();
+  
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function approveTask(projectName, taskId) {
+  try {
+    const allTasks = JSON.parse(localStorage.getItem('projectTasks') || '{}');
+    if (allTasks[projectName]) {
+      const task = allTasks[projectName].find(t => t.id === taskId);
+      if (task) {
+        task.status = 'completed';
+        task.completedAt = new Date().toISOString();
+        localStorage.setItem('projectTasks', JSON.stringify(allTasks));
+        
+        // Update UI
+        const taskEl = document.getElementById(`task-${projectName}-${taskId}`);
+        if (taskEl) {
+          taskEl.style.background = 'rgba(16,185,129,0.1)';
+          taskEl.style.opacity = '0.7';
+          taskEl.querySelector('div:nth-child(2)').innerHTML = `<span style="color:var(--accent-green)">✅</span><span style="font-size:13px;color:var(--text-secondary);text-decoration:line-through">${task.task}</span>`;
+          taskEl.querySelector('div:nth-child(3)').innerHTML = '<span style="font-size:11px;color:var(--accent-green)">✅ Aprobada</span>';
+        }
+        
+        updateProjectMemory(projectName, 'task_approved', { task: task.task });
+        console.log(`Task approved: ${task.task}`);
+      }
+    }
+  } catch (e) {
+    console.error('Error approving task:', e);
+  }
+}
+
+function rejectTask(projectName, taskId) {
+  try {
+    const allTasks = JSON.parse(localStorage.getItem('projectTasks') || '{}');
+    if (allTasks[projectName]) {
+      const taskIndex = allTasks[projectName].findIndex(t => t.id === taskId);
+      if (taskIndex !== -1) {
+        const task = allTasks[projectName][taskIndex];
+        allTasks[projectName].splice(taskIndex, 1);
+        localStorage.setItem('projectTasks', JSON.stringify(allTasks));
+        
+        // Update UI
+        const taskEl = document.getElementById(`task-${projectName}-${taskId}`);
+        if (taskEl) {
+          taskEl.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => taskEl.remove(), 300);
+        }
+        
+        updateProjectMemory(projectName, 'task_rejected', { task: task.task });
+        console.log(`Task rejected: ${task.task}`);
+      }
+    }
+  } catch (e) {
+    console.error('Error rejecting task:', e);
+  }
+}
+
+function suggestTasks(projectName) {
+  // Generate AI-like suggestions based on project type
+  const suggestions = [
+    { task: 'Configurar analítica avanzada (GA4 + Hotjar)', priority: 'medium', category: 'Analytics' },
+    { task: 'Implementar sistema de backups automáticos', priority: 'high', category: 'Security' },
+    { task: 'Optimizar imágenes (WebP + lazy loading)', priority: 'medium', category: 'Performance' },
+    { task: 'Crear documentación técnica actualizada', priority: 'low', category: 'Docs' },
+    { task: 'Configurar monitoreo de uptime (Pingdom)', priority: 'medium', category: 'Monitoring' }
+  ];
+  
+  const allTasks = JSON.parse(localStorage.getItem('projectTasks') || '{}');
+  if (!allTasks[projectName]) allTasks[projectName] = [];
+  
+  const existingTasks = allTasks[projectName].map(t => t.task);
+  const newSuggestions = suggestions.filter(s => !existingTasks.includes(s.task));
+  
+  if (newSuggestions.length > 0) {
+    const task = newSuggestions[0];
+    const newId = allTasks[projectName].length > 0 ? Math.max(...allTasks[projectName].map(t => t.id)) + 1 : 1;
+    task.id = newId;
+    task.status = 'pending';
+    allTasks[projectName].push(task);
+    localStorage.setItem('projectTasks', JSON.stringify(allTasks));
+    
+    // Refresh modal
+    showTaskModal(projectName, allTasks[projectName]);
+    
+    updateProjectMemory(projectName, 'task_suggested', { task: task.task });
+    console.log(`Task suggested: ${task.task}`);
+  } else {
+    alert('No hay más sugerencias disponibles por el momento.');
+  }
+}
+
+function closeTaskModal() {
+  const modal = document.getElementById('taskModal');
+  if (modal) {
+    modal.style.animation = 'fadeOut 0.3s ease';
+    setTimeout(() => modal.remove(), 300);
+  }
+}
+
+// Add slideOut animation
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+  }
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+`;
+document.head.appendChild(style);
+
 // ========== MOBILE MENU ==========
 function toggleMenu() {
   const sidebar = document.querySelector('.sidebar');
