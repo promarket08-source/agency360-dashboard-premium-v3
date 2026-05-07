@@ -1,0 +1,119 @@
+[
+  {
+    "name": "ColorlibHQ/gentelella",
+    "url": "https://github.com/ColorlibHQ/gentelella",
+    "stars": "21.3k",
+    "description": "Free Bootstrap 5 Admin Dashboard Template",
+    "tech": "Bootstrap 5, HTML, CSS",
+    "stage": "ready-to-use",
+    "dark_mode": true
+  },
+  {
+    "name": "puikinsh/Bootstrap-Admin-Template",
+    "url": "https://github.com/puikinsh/Bootstrap-Admin-Template",
+    "stars": "4.6k",
+    "description": "Bootstrap 5 Admin Dashboard Template",
+    "tech": "Bootstrap 5, HTML, CSS",
+    "stage": "ready-to-use",
+    "dark_mode": true
+  },
+  {
+    "name": "puikinsh/sufee-admin-dashboard",
+    "url": "https://github.com/puikinsh/sufee-admin-dashboard",
+    "stars": "897",
+    "description": "Bootstrap 5 Admin Dashboard Template",
+    "tech": "Bootstrap 5, HTML, CSS",
+    "stage": "ready-to-use",
+    "dark_mode": true
+  },
+  {
+    "name": "puikinsh/concept",
+    "url": "https://github.com/puikinsh/concept",
+    "stars": "728",
+    "description": "Bootstrap 5 Admin Dashboard Template",
+    "tech": "Bootstrap 5, HTML, CSS",
+    "stage": "ready-to-use",
+    "dark_mode": true
+  },
+  {
+    "name": "mazyar1128/tailwindcss-movie-dashboard",
+    "url": "https://github.com/mazyar1128/tailwindcss-movie-dashboard",
+    "stars": "69",
+    "description": "Movie dashboard with Tailwind CSS and Alpine.js",
+    "tech": "Tailwind CSS, Alpine.js, HTML",
+    "stage": "demo",
+    "dark_mode": true
+  },
+  {
+    "name": "russkyc/blazewind-admin-template",
+    "url": "https://github.com/russkyc/blazewind-admin-template",
+    "stars": "59",
+    "description": "Blazor + Tailwind CSS Admin Template",
+    "tech": "Blazor, Tailwind CSS, C#",
+    "stage": "demo",
+    "dark_mode": true
+  },
+  {
+    "name": "simzikov/dashbrd",
+    "url": "https://github.com/simzikov/dashbrd",
+    "stars": "34",
+    "description": "Dashboard template powered by Bootstrap",
+    "tech": "Bootstrap, HTML, CSS",
+    "stage": "basic",
+    "dark_mode": false
+  },
+  {
+    "name": "wrappixel/monster-admin-lite",
+    "url": "https://github.com/wrappixel/monster-admin-lite",
+    "stars": "28",
+    "description": "Free Bootstrap 5 dashboard theme by WrapPixel",
+    "tech": "Bootstrap 5, HTML, CSS, jQuery",
+    "stage": "ready-to-use",
+    "dark_mode": true
+  },
+  {
+    "name": "mazyar1128/tailwindcss-team-management",
+    "url": "https://github.com/mazyar1128/tailwindcss-team-management",
+    "stars": "15",
+    "description": "Team management dashboard with Tailwind CSS",
+    "tech": "Tailwind CSS, HTML, Alpine.js",
+    "stage": "demo",
+    "dark_mode": true
+  },
+  {
+    "name": "abhaytalreja/taildash",
+    "url": "https://github.com/abhaytalreja/taildash",
+    "stars": "14",
+    "description": "Tailwind CSS Dashboard",
+    "tech": "Tailwind CSS, HTML",
+    "stage": "basic",
+    "dark_mode": true
+  },
+  {
+    "name": "fahmirizalbudi/geiz",
+    "url": "https://github.com/fahmirizalbudi/geiz",
+    "stars": "11",
+    "description": "GeizAdmin - Tailwind CSS Dashboard",
+    "tech": "Tailwind CSS, HTML, Geiz",
+    "stage": "basic",
+    "dark_mode": true
+  },
+  {
+    "name": "DashboardPack/dashio-template",
+    "url": "https://github.com/DashboardPack/dashio-template",
+    "stars": "5",
+    "description": "Free admin dashboard template with Bootstrap 5 and Vite",
+    "tech": "Bootstrap 5, Vite, HTML",
+    "stage": "ready-to-use",
+    "dark_mode": true
+  },
+  {
+    "name": "puikinsh/Adminator-admin-dashboard",
+    "url": "https://github.com/puikinsh/Adminator-admin-dashboard",
+    "stars": "4.6k",
+    "description": "Adminator - Easy to use admin dashboard",
+    "tech": "Bootstrap 5, HTML, CSS",
+    "stage": "ready-to-use",
+    "dark_mode": true
+  }
+]

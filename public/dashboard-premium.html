@@ -1,0 +1,3056 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agencia 360 - Dashboard Premium v3.0</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing: border-box; }
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a25;
+  --bg-card: #16161f;
+  --border: #2a2a3a;
+  --text-primary: #ededf5;
+  --text-secondary: #8b8b9a;
+  --text-muted: #5a5a6a;
+  --accent-blue: #3b82f6;
+  --accent-green: #10b981;
+  --accent-yellow: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-purple: #8b5cf6;
+  --accent-cyan: #06b6d4;
+  --accent-orange: #f97316;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; 
+  background: var(--bg-primary); 
+  color: var(--text-primary); 
+  min-height: 100vh; 
+  display: flex;
+  overflow-x: hidden;
+}
+.sidebar {
+  width: 280px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.sidebar-logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-blue);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sidebar-logo span { 
+  color: var(--text-secondary); 
+  font-size: 11px; 
+  font-weight: 400;
+  background: var(--bg-tertiary);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.voice-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background: var(--accent-purple);
+  border: none;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.voice-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(139,92,246,0.4); }
+.voice-btn.listening { animation: pulse-voice 1s infinite; background: var(--accent-red); }
+@keyframes pulse-voice {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(239,68,68,0.6); }
+}
+.sidebar-nav {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+}
+.nav-group { margin-bottom: 24px; }
+.nav-group-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  font-weight: 600;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 2px;
+  position: relative;
+}
+.nav-item:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.nav-item.active { background: rgba(59,130,246,0.1); color: var(--accent-blue); }
+.nav-item-icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-item-badge {
+  margin-left: auto;
+  background: var(--accent-red);
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.main {
+  flex: 1;
+  margin-left: 280px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header-search {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 13px;
+  width: 300px;
+  outline: none;
+}
+.header-search:focus { border-color: var(--accent-blue); }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.header-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.header-btn:hover { border-color: var(--accent-blue); color: var(--text-primary); }
+.notification-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-red);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.content { flex: 1; padding: 24px; overflow-y: auto; }
+.section { display: none; animation: fadeIn 0.3s ease; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Voice Assistant Modal */
+.voice-modal {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 400px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent-purple);
+  border-radius: var(--radius);
+  padding: 20px;
+  z-index: 1000;
+  box-shadow: 0 8px 32px rgba(139,92,246,0.3);
+}
+.voice-modal.active { display: block; animation: slideUp 0.3s ease; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.voice-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.voice-modal-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-purple);
+}
+.voice-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 18px;
+}
+.voice-transcript {
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-height: 80px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+.voice-status {
+  font-size: 11px;
+  color: var(--accent-cyan);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.voice-wave {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+.voice-wave-bar {
+  width: 3px;
+  height: 12px;
+  background: var(--accent-purple);
+  border-radius: 2px;
+  animation: wave 0.5s ease-in-out infinite;
+}
+.voice-wave-bar:nth-child(2) { animation-delay: 0.1s; }
+.voice-wave-bar:nth-child(3) { animation-delay: 0.2s; }
+.voice-wave-bar:nth-child(4) { animation-delay: 0.3s; }
+@keyframes wave {
+  0%, 100% { height: 6px; }
+  50% { height: 18px; }
+}
+
+/* Cards */
+.grid { display: grid; gap: 16px; margin-bottom: 24px; }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.card:hover::before { opacity: 1; }
+.card:hover { border-color: rgba(59,130,246,0.3); box-shadow: var(--shadow); }
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.card-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.card-value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+.card-label { font-size: 12px; color: var(--text-secondary); }
+.card-change {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.positive { color: var(--accent-green); }
+.negative { color: var(--accent-red); }
+
+/* Progress Bars */
+.progress-container { margin-top: 8px; }
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.progress-bar {
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease;
+  position: relative;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Charts */
+.chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.chart-title { font-size: 14px; font-weight: 600; }
+.chart-canvas { width: 100% !important; }
+
+/* Tables */
+.table-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.table-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.table-title { font-size: 14px; font-weight: 600; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left;
+  padding: 12px 20px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+td {
+  padding: 12px 20px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(42,42,58,0.5);
+}
+tr:hover { background: rgba(26,26,37,0.5); }
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-blue { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+.badge-green { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+.badge-yellow { background: rgba(245,158,11,0.15); color: var(--accent-yellow); }
+.badge-red { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+.badge-purple { background: rgba(139,92,246,0.15); color: var(--accent-purple); }
+
+/* Semaphore */
+.semaphore {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+.semaphore-green { background: var(--accent-green); box-shadow: 0 0 8px rgba(16,185,129,0.4); }
+.semaphore-yellow { background: var(--accent-yellow); box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+.semaphore-red { background: var(--accent-red); box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+
+/* Alerts */
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.alert-red { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: var(--accent-red); }
+.alert-yellow { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: var(--accent-yellow); }
+.alert-green { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--accent-green); }
+
+/* Task Areas */
+.task-area {
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--accent-blue);
+  transition: all 0.2s;
+}
+.task-area:hover { background: rgba(59,130,246,0.05); }
+.task-area-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.task-area-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+.task-area-count {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.task-item input[type="checkbox"] {
+  accent-color: var(--accent-blue);
+  cursor: pointer;
+}
+
+/* Footer */
+.footer {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 16px 24px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.footer a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+.footer a:hover { text-decoration: underline; }
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .main { margin-left: 0; }
+  .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  .header-search { width: 200px; }
+}
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+</style>
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      🚀 Agencia 360
+      <span>v3.0 Premium</span>
+    </div>
+    <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">🎤</button>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-group-label">Principal</div>
+      <div class="nav-item active" data-section="executive" onclick="showSection('executive')">
+        <span class="nav-item-icon">📊</span>
+        Dashboard Ejecutivo
+      </div>
+      <div class="nav-item" data-section="crm" onclick="showSection('crm')">
+        <span class="nav-item-icon">👥</span>
+        CRM / Clientes
+        <span class="nav-item-badge">23</span>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Marketing</div>
+      <div class="nav-item" data-section="campaigns" onclick="showSection('campaigns')">
+        <span class="nav-item-icon">📢</span>
+        Panel de Campañas
+      </div>
+      <div class="nav-item" data-section="sales" onclick="showSection('sales')">
+        <span class="nav-item-icon">💰</span>
+        Sales Pipeline
+      </div>
+      <div class="nav-item" data-section="social" onclick="showSection('social')">
+        <span class="nav-item-icon">🌐</span>
+        Redes Sociales
+        <span class="nav-item-badge">6</span>
+      </div>
+      <div class="nav-item" data-section="opportunities" onclick="showSection('opportunities')">
+        <span class="nav-item-icon">💡</span>
+        Oportunidades
+        <span class="nav-item-badge">12</span>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Operaciones</div>
+      <div class="nav-item" data-section="operations" onclick="showSection('operations')">
+        <span class="nav-item-icon">⚙️</span>
+        Operaciones Internas
+        <span class="nav-item-badge">47</span>
+      </div>
+      <div class="nav-item" data-section="finance" onclick="showSection('finance')">
+        <span class="nav-item-icon">💳</span>
+        Finanzas
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">IA & Automatización</div>
+      <div class="nav-item" data-section="ai" onclick="showSection('ai')">
+        <span class="nav-item-icon">🤖</span>
+        IA + Automatizaciones
+        <span class="nav-item-badge">192</span>
+      </div>
+      <div class="nav-item" data-section="reports" onclick="showSection('reports')">
+        <span class="nav-item-icon">📄</span>
+        Reportes
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Sistema</div>
+      <div class="nav-item" data-section="projects" onclick="showSection('projects')">
+        <span class="nav-item-icon">📁</span>
+        Proyectos
+        <span class="nav-item-badge">31</span>
+      </div>
+      <div class="nav-item" data-section="agents" onclick="showSection('agents')">
+        <span class="nav-item-icon">🤖</span>
+        Agentes
+      </div>
+      <div class="nav-item" data-section="mercadopago" onclick="showSection('mercadopago')">
+        <span class="nav-item-icon">💳</span>
+        Mercado Pago
+        <span class="nav-item-badge">$$</span>
+      </div>
+      <div class="nav-item" data-section="resources" onclick="showSection('resources')">
+        <span class="nav-item-icon">📦</span>
+        Recursos
+      </div>
+      <div class="nav-item" data-section="repos" onclick="showSection('repos')">
+        <span class="nav-item-icon">🐙</span>
+        Repos Clonados
+      </div>
+      <div class="nav-item" data-section="settings" onclick="showSection('settings')">
+        <span class="nav-item-icon">⚙️</span>
+        Configuración
+      </div>
+    </div>
+  </nav>
+</div>
+
+<!-- Voice Assistant Modal -->
+<div class="voice-modal" id="voiceModal">
+  <div class="voice-modal-header">
+    <div class="voice-modal-title">🎤 Asistente de Voz</div>
+    <button class="voice-close" onclick="toggleVoice()">✕</button>
+  </div>
+  <div class="voice-transcript" id="voiceTranscript">
+    Presiona el botón de micrófono y habla...
+  </div>
+  <div class="voice-status">
+    <div class="voice-wave" id="voiceWave" style="display:none">
+      <div class="voice-wave-bar"></div>
+      <div class="voice-wave-bar"></div>
+      <div class="voice-wave-bar"></div>
+      <div class="voice-wave-bar"></div>
+    </div>
+    <span id="voiceStatus">Listo para escuchar</span>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+  <header class="header">
+    <div class="header-left">
+      <input type="text" class="header-search" placeholder="🔍 Buscar cliente, campaña, reporte, proyecto..." id="globalSearch" oninput="globalSearch(this.value)">
+    </div>
+    <div class="header-right">
+      <button class="header-btn" onclick="exportData()">
+        <span>📥</span> Exportar
+      </button>
+      <button class="header-btn" id="notifBtn">
+        <span class="notification-dot"></span>
+        Notificaciones
+        <span class="nav-item-badge">3</span>
+      </button>
+      <button class="header-btn" onclick="toggleVoice()">
+        <span>🎤</span> Voz
+      </button>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- 1. DASHBOARD EJECUTIVO -->
+    <div class="section active" id="s-executive">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Dashboard Ejecutivo</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">Resumen general del estado de la agencia hoy - <span id="currentDate"></span></p>
+      </div>
+      
+      <!-- KPIs principales -->
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Revenue Mensual</div>
+            <span class="badge badge-green">+12.5%</span>
+          </div>
+          <div class="card-value">$84,250</div>
+          <div class="card-label">Meta: $75,000</div>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>Progreso</span>
+              <span style="color:var(--accent-green);font-weight:600">112%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:112%;background:linear-gradient(90deg, var(--accent-green), #34d399)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">MRR</div>
+            <span class="badge badge-green">+8.3%</span>
+          </div>
+          <div class="card-value">$312K</div>
+          <div class="card-label">Monthly Recurring Revenue</div>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>Crecimiento</span>
+              <span style="color:var(--accent-green)">↑ 8.3%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:68%;background:linear-gradient(90deg, var(--accent-blue), var(--accent-cyan))"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Clientes Activos</div>
+            <span class="badge badge-blue">23</span>
+          </div>
+          <div class="card-value">23</div>
+          <div class="card-label">+3 nuevos este mes</div>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>Retención</span>
+              <span style="color:var(--accent-green)">97.9%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:97.9%;background:linear-gradient(90deg, var(--accent-purple), #a78bfa)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">ROAS Promedio</div>
+            <span class="card-change positive">↑ 0.4</span>
+          </div>
+          <div class="card-value" style="font-size:22px;color:var(--accent-green)">4.2x</div>
+          <div class="card-label">Return on Ad Spend</div>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>Eficiencia</span>
+              <span style="color:var(--accent-green)">Alta</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:84%;background:linear-gradient(90deg, var(--accent-green), #6ee7b7)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Segunda fila KPIs -->
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Ganancia Neta</div>
+            <span class="card-change positive">↑ 15%</span>
+          </div>
+          <div class="card-value" style="font-size:22px;color:var(--accent-green)">$28,450</div>
+          <div class="card-label">Margen: 33.8%</div>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>Margen objetivo</span>
+              <span>84.5%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:84.5%;background:var(--accent-green)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">CAC</div>
+            <span class="card-change negative">↓ 8%</span>
+          </div>
+          <div class="card-value" style="font-size:22px">$320</div>
+          <div class="card-label">Customer Acquisition Cost</div>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>vs Límite $400</span>
+              <span style="color:var(--accent-green)">80%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:80%;background:var(--accent-yellow)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">LTV</div>
+          </div>
+          <div class="card-value" style="font-size:22px;color:var(--accent-purple)">$8,450</div>
+          <div class="card-label">Lifetime Value</div>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>LTV/CAC Ratio</span>
+              <span style="color:var(--accent-green)">26.4x</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:95%;background:linear-gradient(90deg, var(--accent-purple), #c4b5fd)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Churn Rate</div>
+            <span class="badge badge-yellow">2.1%</span>
+          </div>
+          <div class="card-value" style="font-size:22px;color:var(--accent-yellow)">2.1%</div>
+          <div class="card-label">Clientes perdidos: 1</div>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>Meta: <2%</span>
+              <span style="color:var(--accent-yellow)">Alerta</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:52%;background:var(--accent-yellow)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos -->
+      <div class="grid grid-2">
+        <div class="chart-container">
+          <div class="chart-header">
+            <div class="chart-title">📈 Ingresos Últimos 12 Meses</div>
+            <select style="background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);padding:6px 10px;border-radius:6px;font-size:12px">
+              <option>2026</option>
+              <option>2025</option>
+            </select>
+          </div>
+          <canvas id="revenueChart" class="chart-canvas" height="200"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header">
+            <div class="chart-title">📊 Embudo de Ventas</div>
+          </div>
+          <canvas id="funnelChart" class="chart-canvas" height="200"></canvas>
+        </div>
+      </div>
+
+      <!-- Alertas y Top Performers -->
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="chart-title">🚨 Alertas Críticas</div>
+          </div>
+          <div class="alert alert-red">
+            <span>⚠️</span>
+            <div>
+              <strong>CPA alto en campaña "Black Friday"</strong>
+              <div style="font-size:11px;color:var(--accent-red);opacity:0.8;margin-top:2px">CPA: $45 (límite: $30) - Requiere atención</div>
+            </div>
+          </div>
+          <div class="alert alert-yellow">
+            <span>⚠️</span>
+            <div>
+              <strong>Cliente "Tiempo Propiedades" sin actividad</strong>
+              <div style="font-size:11px;color:var(--accent-yellow);opacity:0.8;margin-top:2px">Última acción: hace 5 días - Estado: Inactivo</div>
+            </div>
+          </div>
+          <div class="alert alert-green">
+            <span>✅</span>
+            <div>
+              <strong>Meta mensual alcanzada</strong>
+              <div style="font-size:11px;color:var(--accent-green);opacity:0.8;margin-top:2px">112% de la meta original - $84,250 / $75,000</div>
+            </div>
+          </div>
+        </div>
+        <div class="table-container">
+          <div class="table-header">
+            <div class="table-title">🏆 Top Clientes Performers</div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>ROAS</th>
+                <th>Revenue</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Biocuantum</strong><br><span style="font-size:11px;color:var(--text-muted)">Salud / Bio</span></td>
+                <td><span class="badge badge-green">6.8x</span></td>
+                <td>$28,450</td>
+                <td><span class="semaphore semaphore-green"></span>Excelente</td>
+              </tr>
+              <tr>
+                <td><strong>Calzados Antonella</strong><br><span style="font-size:11px;color:var(--text-muted)">Moda</span></td>
+                <td><span class="badge badge-green">5.2x</span></td>
+                <td>$18,200</td>
+                <td><span class="semaphore semaphore-green"></span>Muy bueno</td>
+              </tr>
+              <tr>
+                <td><strong>Chocados Herrera</strong><br><span style="font-size:11px;color:var(--text-muted)">Comida</span></td>
+                <td><span class="badge badge-yellow">3.1x</span></td>
+                <td>$12,800</td>
+                <td><span class="semaphore semaphore-yellow"></span>Regular</td>
+              </tr>
+              <tr>
+                <td><strong>Burbuja</strong><br><span style="font-size:11px;color:var(--text-muted)">Turismo</span></td>
+                <td><span class="badge badge-blue">4.5x</span></td>
+                <td>$9,450</td>
+                <td><span class="semaphore semaphore-green"></span>Bueno</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Utilización del equipo y proyectos -->
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">👥 Utilización del Equipo</div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:12px">Desarrolladores</span>
+              <span style="font-size:12px;color:var(--accent-green)">85%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:85%;background:linear-gradient(90deg, var(--accent-blue), #60a5fa)"></div>
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:12px">Diseñadores</span>
+              <span style="font-size:12px;color:var(--accent-green)">72%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:72%;background:linear-gradient(90deg, var(--accent-green), #6ee7b7)"></div>
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:12px">Marketers</span>
+              <span style="font-size:12px;color:var(--accent-yellow)">91%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:91%;background:linear-gradient(90deg, var(--accent-yellow), #fbbf24)"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:12px">Agentes IA</span>
+              <span style="font-size:12px;color:var(--accent-purple)">68%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:68%;background:linear-gradient(90deg, var(--accent-purple), #a78bfa)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📋 Proyectos Atrasados</div>
+            <span class="badge badge-red">2</span>
+          </div>
+          <div style="font-size:13px" id="delayedProjects">
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+              <span>San Bernardo Casa</span>
+              <span class="badge badge-yellow">Planning 45%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+              <span>Florería Sol Naciente</span>
+              <span class="badge badge-red">Atrasado 23%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0">
+              <span>De la Cris Empanadas</span>
+              <span class="badge badge-yellow">Planning 60%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Áreas por Hacer (TODO) -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="chart-title">✅ Áreas por Hacer</div>
+          <span class="badge badge-blue" id="todoCount">7 tareas</span>
+        </div>
+        <div id="todoListExecutive">
+          <div class="task-area" style="border-left-color:var(--accent-red)">
+            <div class="task-area-header">
+              <div class="task-area-title">🔴 Críticas</div>
+              <div class="task-area-count">2 tareas</div>
+            </div>
+            <div class="task-item">
+              <input type="checkbox" id="task1" onchange="toggleTask(this)">
+              <label for="task1">Revisar CPA campaña Black Friday</label>
+            </div>
+            <div class="task-item">
+              <input type="checkbox" id="task2" onchange="toggleTask(this)">
+              <label for="task2">Contactar cliente Tiempo Propiedades</label>
+            </div>
+          </div>
+          <div class="task-area" style="border-left-color:var(--accent-yellow)">
+            <div class="task-area-header">
+              <div class="task-area-title">🟡 En Progreso</div>
+              <div class="task-area-count">3 tareas</div>
+            </div>
+            <div class="task-item">
+              <input type="checkbox" id="task3" onchange="toggleTask(this)">
+              <label for="task3">Actualizar creativos Google Ads</label>
+            </div>
+            <div class="task-item">
+              <input type="checkbox" id="task4" onchange="toggleTask(this)">
+              <label for="task4">Revisar métricas Chocados Herrera</label>
+            </div>
+            <div class="task-item">
+              <input type="checkbox" id="task5" onchange="toggleTask(this)">
+              <label for="task5">Cargar nuevos repos en /repos</label>
+            </div>
+          </div>
+          <div class="task-area" style="border-left-color:var(--accent-green)">
+            <div class="task-area-header">
+              <div class="task-area-title">🟢 Completadas</div>
+              <div class="task-area-count">2 tareas</div>
+            </div>
+            <div class="task-item">
+              <input type="checkbox" id="task6" checked onchange="toggleTask(this)">
+              <label for="task6" style="text-decoration:line-through;color:var(--text-muted)">Organizar disco D:\ completo</label>
+            </div>
+            <div class="task-item">
+              <input type="checkbox" id="task7" checked onchange="toggleTask(this)">
+              <label for="task7" style="text-decoration:line-through;color:var(--text-muted)">Clonar repos GitHub</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. CRM / CLIENTES -->
+    <div class="section" id="s-crm">
+      <div style="margin-bottom:24px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">CRM / Clientes</h1>
+          <p style="font-size:13px;color:var(--text-secondary)">Gestión comercial y perfil de clientes - 23 activos</p>
+        </div>
+        <button class="header-btn" style="background:var(--accent-blue);color:white;border-color:var(--accent-blue)">
+          <span>➕</span> Nuevo Cliente
+        </button>
+      </div>
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Total Clientes</div>
+          </div>
+          <div class="card-value">23</div>
+          <div class="card-label">Activos: 21 | Inactivos: 2</div>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>Activos</span>
+              <span style="color:var(--accent-green)">91.3%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:91.3%;background:var(--accent-green)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Nuevos este mes</div>
+            <span class="card-change positive">↑ 3</span>
+          </div>
+          <div class="card-value" style="color:var(--accent-green)">+3</div>
+          <div class="card-label">vs -1 mes anterior</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Ticket Promedio</div>
+          </div>
+          <div class="card-value">$3,650</div>
+          <div class="card-label">Mensual por cliente</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Churn (Mes)</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-yellow)">2.1%</div>
+          <div class="card-label">1 cliente perdido</div>
+        </div>
+      </div>
+      <!-- Tabla de clientes -->
+      <div class="table-container">
+        <div class="table-header">
+          <div class="table-title">Listado de Clientes (31 proyectos)</div>
+          <input type="text" placeholder="🔍 Buscar cliente..." style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:6px;padding:6px 12px;color:var(--text-primary);font-size:12px;width:250px">
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Nicho</th>
+              <th>MRR</th>
+              <th>ROAS</th>
+              <th>Estado</th>
+              <th>Renovación</th>
+              <th>Responsable</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Biocuantum</strong><br><span style="font-size:11px;color:var(--text-muted)">biocuantum.com</span></td>
+              <td><span class="badge badge-purple">Salud</span></td>
+              <td>$8,450</td>
+              <td><span class="badge badge-green">6.8x</span></td>
+              <td><span class="semaphore semaphore-green"></span><span class="badge badge-green">Activo</span></td>
+              <td>2026-12-01</td>
+              <td>María G.</td>
+              <td><button class="header-btn" style="padding:4px 8px;font-size:11px">Ver</button></td>
+            </tr>
+            <tr>
+              <td><strong>Calzados Antonella</strong><br><span style="font-size:11px;color:var(--text-muted)">antonella.com</span></td>
+              <td><span class="badge badge-blue">Moda</span></td>
+              <td>$6,200</td>
+              <td><span class="badge badge-green">5.2x</span></td>
+              <td><span class="semaphore semaphore-green"></span><span class="badge badge-green">Activo</span></td>
+              <td>2026-10-15</td>
+              <td>Carlos R.</td>
+              <td><button class="header-btn" style="padding:4px 8px;font-size:11px">Ver</button></td>
+            </tr>
+            <tr>
+              <td><strong>Chocados Herrera</strong><br><span style="font-size:11px;color:var(--text-muted)">chocados.com</span></td>
+              <td><span class="badge badge-orange">Comida</span></td>
+              <td>$4,100</td>
+              <td><span class="badge badge-yellow">3.1x</span></td>
+              <td><span class="semaphore semaphore-yellow"></span><span class="badge badge-yellow">Riesgo</span></td>
+              <td>2026-09-20</td>
+              <td>Ana L.</td>
+              <td><button class="header-btn" style="padding:4px 8px;font-size:11px">Ver</button></td>
+            </tr>
+            <tr>
+              <td><strong>Tiempo Propiedades</strong><br><span style="font-size:11px;color:var(--text-muted)">tiempopropiedades.cl</span></td>
+              <td><span class="badge badge-green">Real Estate</span></td>
+              <td>$3,800</td>
+              <td><span class="badge badge-blue">4.0x</span></td>
+              <td><span class="semaphore semaphore-yellow"></span><span class="badge badge-yellow">Inactivo</span></td>
+              <td>2026-11-10</td>
+              <td>Pedro M.</td>
+              <td><button class="header-btn" style="padding:4px 8px;font-size:11px">Ver</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3. PANEL DE CAMPAÑAS -->
+    <div class="section" id="s-campaigns">
+      <div style="margin-bottom:24px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Panel de Campañas</h1>
+          <p style="font-size:13px;color:var(--text-secondary)">Meta Ads, Google Ads, TikTok Ads - 4 activas</p>
+        </div>
+        <button class="header-btn" style="background:var(--accent-blue);color:white;border-color:var(--accent-blue)">
+          <span>➕</span> Nueva Campaña
+        </button>
+      </div>
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Spend Total</div>
+          </div>
+          <div class="card-value">$28,450</div>
+          <div class="card-label">Meta: $25,000</div>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>Ejecutado</span>
+              <span style="color:var(--accent-blue)">113.8%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:113.8%;background:var(--accent-blue)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">ROAS Promedio</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-green)">4.2x</div>
+          <div class="card-label">+0.3 vs mes anterior</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Conversiones</div>
+          </div>
+          <div class="card-value">1,247</div>
+          <div class="card-label">CPA: $22.80</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">CTR Promedio</div>
+          </div>
+          <div class="card-value">2.8%</div>
+          <div class="card-label">+0.4% vs mes anterior</div>
+        </div>
+      </div>
+      <!-- Tabla de campañas -->
+      <div class="table-container">
+        <div class="table-header">
+          <div class="table-title">Campañas Activas</div>
+          <div style="display:flex;gap:8px">
+            <select style="background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);padding:6px 10px;border-radius:6px;font-size:12px">
+              <option>Todas las plataformas</option>
+              <option>Meta Ads</option>
+              <option>Google Ads</option>
+              <option>TikTok Ads</option>
+            </select>
+            <button class="header-btn">🔍 Filtrar</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Campaña</th>
+              <th>Cliente</th>
+              <th>Plataforma</th>
+              <th>Spend</th>
+              <th>ROAS</th>
+              <th>CPA</th>
+              <th>CTR</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Black Friday Biocuantum</strong></td>
+              <td>Biocuantum</td>
+              <td><span class="badge badge-blue">Meta</span></td>
+              <td>$8,450</td>
+              <td><span class="badge badge-green">6.8x</span></td>
+              <td>$18.20</td>
+              <td>3.2%</td>
+              <td><span class="badge badge-green">Activa</span></td>
+            </tr>
+            <tr>
+              <td><strong>Remate Calzados Q4</strong></td>
+              <td>Calzados Antonella</td>
+              <td><span class="badge badge-blue">Meta</span></td>
+              <td>$6,200</td>
+              <td><span class="badge badge-green">5.2x</span></td>
+              <td>$22.50</td>
+              <td>2.9%</td>
+              <td><span class="badge badge-green">Activa</span></td>
+            </tr>
+            <tr>
+              <td><strong>Google Search Chocados</strong></td>
+              <td>Chocados Herrera</td>
+              <td><span class="badge badge-yellow">Google</span></td>
+              <td>$4,100</td>
+              <td><span class="badge badge-yellow">3.1x</span></td>
+              <td>$45.00</td>
+              <td>1.8%</td>
+              <td><span class="badge badge-red">Alerta</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Gráfico de performance -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <div class="chart-title">📈 Comparación de Campañas</div>
+        </div>
+        <canvas id="campaignsChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- 4. SALES PIPELINE -->
+    <div class="section" id="s-sales">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Sales Pipeline</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">Embudo de ventas y leads - 89 leads este mes</p>
+      </div>
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Leads Este Mes</div>
+          </div>
+          <div class="card-value">89</div>
+          <div class="card-label">+12 vs mes anterior</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Valor Pipeline</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-purple)">$458K</div>
+          <div class="card-label">Oportunidades abiertas</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Tasa Conversión</div>
+          </div>
+          <div class="card-value">18%</div>
+          <div class="card-label">Desde lead a cliente</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Tiempo Cierre</div>
+          </div>
+          <div class="card-value" style="font-size:22px">14 días</div>
+          <div class="card-label">Promedio</div>
+        </div>
+      </div>
+      <!-- Pipeline visual -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="chart-title">🎯 Pipeline Visual</div>
+        </div>
+        <div style="display:flex;gap:8px;overflow-x:auto;padding:16px 0">
+          <div style="min-width:200px;background:var(--bg-tertiary);border-radius:8px;padding:12px">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">LEAD (32)</div>
+            <div style="font-size:20px;font-weight:700;color:var(--accent-blue)">32</div>
+            <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">$124K valor</div>
+            <div class="progress-bar" style="margin-top:8px">
+              <div class="progress-fill" style="width:64%;background:var(--accent-blue)"></div>
+            </div>
+          </div>
+          <div style="min-width:200px;background:var(--bg-tertiary);border-radius:8px;padding:12px">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">DISCOVERY (18)</div>
+            <div style="font-size:20px;font-weight:700;color:var(--accent-purple)">18</div>
+            <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">$98K valor</div>
+            <div class="progress-bar" style="margin-top:8px">
+              <div class="progress-fill" style="width:78%;background:var(--accent-purple)"></div>
+            </div>
+          </div>
+          <div style="min-width:200px;background:var(--bg-tertiary);border-radius:8px;padding:12px">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">PROPOSAL (12)</div>
+            <div style="font-size:20px;font-weight:700;color:var(--accent-yellow)">12</div>
+            <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">$156K valor</div>
+            <div class="progress-bar" style="margin-top:8px">
+              <div class="progress-fill" style="width:85%;background:var(--accent-yellow)"></div>
+            </div>
+          </div>
+          <div style="min-width:200px;background:var(--bg-tertiary);border-radius:8px;padding:12px">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">NEGOTIATION (8)</div>
+            <div style="font-size:20px;font-weight:700;color:var(--accent-orange)">8</div>
+            <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">$80K valor</div>
+            <div class="progress-bar" style="margin-top:8px">
+              <div class="progress-fill" style="width:67%;background:var(--accent-orange)"></div>
+            </div>
+          </div>
+          <div style="min-width:200px;background:var(--bg-tertiary);border-radius:8px;padding:12px">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">WON (5)</div>
+            <div style="font-size:20px;font-weight:700;color:var(--accent-green)">5</div>
+            <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">$58K valor</div>
+            <div class="progress-bar" style="margin-top:8px">
+              <div class="progress-fill" style="width:92%;background:var(--accent-green)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4.5 REDES SOCIALES -->
+    <div class="section" id="s-social">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">🌐 Redes Sociales - Integración Total</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">Gestión centralizada: Facebook, Instagram, TikTok, YouTube, LinkedIn, X | 192 agentes automatizando</p>
+      </div>
+      <!-- KPIs Redes Sociales -->
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Seguidores Totales</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-blue)">48.2K</div>
+          <div class="card-label">+2.4K este mes</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Engagement Rate</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-green)">4.8%</div>
+          <div class="card-label">Promedio todas las redes</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Publicaciones/mes</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-purple)">156</div>
+          <div class="card-label">Automatizadas: 89%</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Leads desde Redes</div>
+            <span class="card-change positive">↑ 23%</span>
+          </div>
+          <div class="card-value" style="color:var(--accent-orange)">234</div>
+          <div class="card-label">Conversiones: 18%</div>
+        </div>
+      </div>
+
+      <!-- Integración por Red Social -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:16px;margin-bottom:24px">
+        <!-- Facebook -->
+        <div class="card" style="border-left:3px solid #1877F2">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:20px">📘</span>
+              <div>
+                <div class="card-title" style="color:#1877F2">Facebook</div>
+                <div style="font-size:11px;color:var(--text-muted)">@tu.web.pro360</div>
+              </div>
+            </div>
+            <span class="badge badge-green">Conectado</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary);line-height:1.8">
+            <div style="display:flex;justify-content:space-between"><span>Seguidores:</span><strong style="color:var(--text-primary)">12,450</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Alcance/mes:</span><strong style="color:var(--text-primary)">145K</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Engagement:</span><strong style="color:var(--text-primary)">3.2%</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Publicaciones:</span><strong style="color:var(--text-primary)">45/mes</strong></div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:6px">
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px" onclick="window.open('https://facebook.com/tu.web.pro360','_blank')">🔗 Abrir</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">📊 Analytics</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">🤖 Auto-Post</button>
+          </div>
+        </div>
+
+        <!-- Instagram -->
+        <div class="card" style="border-left:3px solid #E4405F">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:20px">📸</span>
+              <div>
+                <div class="card-title" style="color:#E4405F">Instagram</div>
+                <div style="font-size:11px;color:var(--text-muted)">@tu.web.pro360</div>
+              </div>
+            </div>
+            <span class="badge badge-green">Conectado</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary);line-height:1.8">
+            <div style="display:flex;justify-content:space-between"><span>Seguidores:</span><strong style="color:var(--text-primary)">18,920</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Alcance/mes:</span><strong style="color:var(--text-primary)">280K</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Engagement:</span><strong style="color:var(--text-primary)">6.1%</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Publicaciones:</span><strong style="color:var(--text-primary)">60/mes</strong></div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:6px">
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px" onclick="window.open('https://www.instagram.com/tu.web.pro360/?hl=en','_blank')">🔗 Abrir</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">📊 Analytics</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">🤖 Auto-Post</button>
+          </div>
+        </div>
+
+        <!-- TikTok -->
+        <div class="card" style="border-left:3px solid #000000">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:20px">🎵</span>
+              <div>
+                <div class="card-title" style="color:#000">TikTok</div>
+                <div style="font-size:11px;color:var(--text-muted)">@tu.web.pro360</div>
+              </div>
+            </div>
+            <span class="badge badge-green">Conectado</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary);line-height:1.8">
+            <div style="display:flex;justify-content:space-between"><span>Seguidores:</span><strong style="color:var(--text-primary)">8,750</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Views/mes:</span><strong style="color:var(--text-primary)">1.2M</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Engagement:</span><strong style="color:var(--text-primary)">8.3%</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Videos:</span><strong style="color:var(--text-primary)">30/mes</strong></div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:6px">
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px" onclick="window.open('https://tiktok.com/@tu.web.pro360','_blank')">🔗 Abrir</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">📊 Analytics</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">🤖 Auto-Post</button>
+          </div>
+        </div>
+
+        <!-- YouTube -->
+        <div class="card" style="border-left:3px solid #FF0000">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:20px">🎥</span>
+              <div>
+                <div class="card-title" style="color:#FF0000">YouTube</div>
+                <div style="font-size:11px;color:var(--text-muted)">@tu.web.pro360</div>
+              </div>
+            </div>
+            <span class="badge badge-yellow">En Proceso</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary);line-height:1.8">
+            <div style="display:flex;justify-content:space-between"><span>Suscriptores:</span><strong style="color:var(--text-primary)">3,240</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Views/mes:</span><strong style="color:var(--text-primary)">45K</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Engagement:</span><strong style="color:var(--text-primary)">5.4%</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Videos:</span><strong style="color:var(--text-primary)">8/mes</strong></div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:6px">
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px" onclick="window.open('https://youtube.com/@tu.web.pro360','_blank')">🔗 Abrir</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">📊 Analytics</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">🤖 Auto-Post</button>
+          </div>
+        </div>
+
+        <!-- LinkedIn -->
+        <div class="card" style="border-left:3px solid #0A66C2">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:20px">💼</span>
+              <div>
+                <div class="card-title" style="color:#0A66C2">LinkedIn</div>
+                <div style="font-size:11px;color:var(--text-muted)">@tu.web.pro360</div>
+              </div>
+            </div>
+            <span class="badge badge-green">Conectado</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary);line-height:1.8">
+            <div style="display:flex;justify-content:space-between"><span>Seguidores:</span><strong style="color:var(--text-primary)">4,120</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Alcance/mes:</span><strong style="color:var(--text-primary)">32K</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Engagement:</span><strong style="color:var(--text-primary)">2.8%</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Publicaciones:</span><strong style="color:var(--text-primary)">13/mes</strong></div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:6px">
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px" onclick="window.open('https://linkedin.com/company/tu-web-pro360','_blank')">🔗 Abrir</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">📊 Analytics</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">🤖 Auto-Post</button>
+          </div>
+        </div>
+
+        <!-- X (Twitter) -->
+        <div class="card" style="border-left:3px solid #1DA1F2">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:20px">🐦</span>
+              <div>
+                <div class="card-title" style="color:#1DA1F2">X (Twitter)</div>
+                <div style="font-size:11px;color:var(--text-muted)">@tuwebpro360</div>
+              </div>
+            </div>
+            <span class="badge badge-green">Conectado</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary);line-height:1.8">
+            <div style="display:flex;justify-content:space-between"><span>Seguidores:</span><strong style="color:var(--text-primary)">720</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Impresiones/mes:</span><strong style="color:var(--text-primary)">18K</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Engagement:</span><strong style="color:var(--text-primary)">1.9%</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>Tweets:</span><strong style="color:var(--text-primary)">90/mes</strong></div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:6px">
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px" onclick="window.open('https://x.com/tuwebpro360','_blank')">🔗 Abrir</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">📊 Analytics</button>
+            <button class="header-btn" style="flex:1;font-size:10px;padding:4px 8px">🤖 Auto-Post</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico de Crecimiento Redes Sociales -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <div class="chart-title">📈 Crecimiento de Seguidores (Últimos 6 meses)</div>
+        </div>
+        <canvas id="socialGrowthChart" height="200"></canvas>
+      </div>
+
+      <!-- Enjambre de Agentes para Redes Sociales -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-header">
+          <div class="chart-title">🤖 Enjambre de Agentes - Gestión de Redes (192 Agentes)</div>
+          <div style="display:flex;gap:6px">
+            <button class="header-btn" style="background:var(--accent-green);color:white;border-color:var(--accent-green);font-size:10px" onclick="deploySwarm()">🚀 Desplegar Enjambre</button>
+            <button class="header-btn" style="font-size:10px" onclick="monitorSwarm()">📊 Monitor</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:12px">
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:10px;font-size:11px">
+            <div style="color:var(--accent-blue);font-weight:600;margin-bottom:4px">📘 Facebook Agents (32)</div>
+            <div style="color:var(--text-secondary)">• Content Creator (8)</div>
+            <div style="color:var(--text-secondary)">• Ads Manager (12)</div>
+            <div style="color:var(--text-secondary)">• Engagement (12)</div>
+          </div>
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:10px;font-size:11px">
+            <div style="color:var(--accent-purple);font-weight:600;margin-bottom:4px">📸 Instagram Agents (48)</div>
+            <div style="color:var(--text-secondary)">• Reels Creator (20)</div>
+            <div style="color:var(--text-secondary)">• Stories Manager (15)</div>
+            <div style="color:var(--text-secondary)">• Engagement (13)</div>
+          </div>
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:10px;font-size:11px">
+            <div style="color:var(--accent-red);font-weight:600;margin-bottom:4px">🎵 TikTok Agents (28)</div>
+            <div style="color:var(--text-secondary)">• Video Creator (15)</div>
+            <div style="color:var(--text-secondary)">• Trend Analyzer (8)</div>
+            <div style="color:var(--text-secondary)">• Viral Booster (5)</div>
+          </div>
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:10px;font-size:11px">
+            <div style="color:var(--accent-red);font-weight:600;margin-bottom:4px">🎥 YouTube Agents (24)</div>
+            <div style="color:var(--text-secondary)">• Video SEO (10)</div>
+            <div style="color:var(--text-secondary)">• Content Planner (8)</div>
+            <div style="color:var(--text-secondary)">• Community Manager (6)</div>
+          </div>
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:10px;font-size:11px">
+            <div style="color:var(--accent-blue);font-weight:600;margin-bottom:4px">💼 LinkedIn Agents (24)</div>
+            <div style="color:var(--text-secondary)">• B2B Outreach (12)</div>
+            <div style="color:var(--text-secondary)">• Content Writer (8)</div>
+            <div style="color:var(--text-secondary)">• Lead Gen (4)</div>
+          </div>
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:10px;font-size:11px">
+            <div style="color:var(--accent-cyan);font-weight:600;margin-bottom:4px">🐦 X Agents (16)</div>
+            <div style="color:var(--text-secondary)">• Tweet Scheduler (8)</div>
+            <div style="color:var(--text-secondary)">• Engagement (5)</div>
+            <div style="color:var(--text-secondary)">• Trend Monitor (3)</div>
+          </div>
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:10px;font-size:11px">
+            <div style="color:var(--accent-yellow);font-weight:600;margin-bottom:4px">🔄 Cross-Platform (20)</div>
+            <div style="color:var(--text-secondary)">• Sync Manager (8)</div>
+            <div style="color:var(--text-secondary)">• Analytics (7)</div>
+            <div style="color:var(--text-secondary)">• Auto-Reply (5)</div>
+          </div>
+        </div>
+        <!-- Estado del Enjambre -->
+        <div style="margin-top:16px;background:var(--bg-tertiary);border-radius:8px;padding:12px">
+          <div style="font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:8px">📊 Estado del Enjambre</div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px">
+            <div style="display:flex;align-items:center;gap:4px">
+              <span class="semaphore semaphore-green" style="width:8px;height:8px"></span>
+              <span style="color:var(--text-secondary)">Activos:</span>
+              <strong style="color:var(--accent-green)">147</strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px">
+              <span class="semaphore semaphore-yellow" style="width:8px;height:8px"></span>
+              <span style="color:var(--text-secondary)">En espera:</span>
+              <strong style="color:var(--accent-yellow)">32</strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px">
+              <span class="semaphore semaphore-red" style="width:8px;height:8px"></span>
+              <span style="color:var(--text-secondary)">Errores:</span>
+              <strong style="color:var(--accent-red)">13</strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px">
+              <span style="color:var(--text-secondary)">Tareas completadas hoy:</span>
+              <strong style="color:var(--accent-blue)">2,847</strong>
+            </div>
+          </div>
+          <div class="progress-bar" style="margin-top:8px;height:8px">
+            <div class="progress-fill" style="width:76%;background:linear-gradient(90deg,var(--accent-green),var(--accent-blue))"></div>
+          </div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:4px">76% del enjambre operativo | 147/192 agentes activos</div>
+        </div>
+      </div>
+
+      <!-- Publicaciones Programadas -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-header">
+          <div class="chart-title">📅 Publicaciones Programadas (Próximos 7 días)</div>
+          <button class="header-btn" style="font-size:10px">➕ Nueva</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th><th>Red Social</th><th>Tipo</th><th>Contenido</th><th>Estado</th><th>Agente</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-size:11px">2026-05-08 08:00</td>
+                <td><span style="color:#E4405F">📸 Instagram</span></td>
+                <td><span class="badge badge-purple">Reel</span></td>
+                <td style="font-size:11px;color:var(--text-secondary)">Demo App Biocuantum - Features</td>
+                <td><span class="badge badge-green">Listo</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">IG-Reels-07</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px">2026-05-08 12:00</td>
+                <td><span style="color:#1877F2">📘 Facebook</span></td>
+                <td><span class="badge badge-blue">Post</span></td>
+                <td style="font-size:11px;color:var(--text-secondary)">Tips Landing Pages - Carousel</td>
+                <td><span class="badge badge-green">Listo</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">FB-Content-12</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px">2026-05-09 10:00</td>
+                <td><span style="color:#000">🎵 TikTok</span></td>
+                <td><span class="badge badge-red">Video</span></td>
+                <td style="font-size:11px;color:var(--text-secondary)">Trending Audio - Burbuja Tours</td>
+                <td><span class="badge badge-yellow">Grabando</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">TT-Video-05</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px">2026-05-10 15:00</td>
+                <td><span style="color:#0A66C2">💼 LinkedIn</span></td>
+                <td><span class="badge badge-blue">Article</span></td>
+                <td style="font-size:11px;color:var(--text-secondary)">IA en Marketing 2026 - B2B</td>
+                <td><span class="badge badge-green">Listo</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">LI-B2B-09</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px">2026-05-11 09:00</td>
+                <td><span style="color:#1DA1F2">🐦 X</span></td>
+                <td><span class="badge badge-cyan">Thread</span></td>
+                <td style="font-size:11px;color:var(--text-secondary)">Tips Automatización n8n</td>
+                <td><span class="badge badge-green">Listo</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">X-Tweet-03</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px">2026-05-12 14:00</td>
+                <td><span style="color:#FF0000">🎥 YouTube</span></td>
+                <td><span class="badge badge-red">Video</span></td>
+                <td style="font-size:11px;color:var(--text-secondary)">Tutorial: Crear Landing en 10min</td>
+                <td><span class="badge badge-yellow">Editando</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">YT-Video-02</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4.6 OPORTUNIDADES DE NEGOCIO -->
+    <div class="section" id="s-opportunities">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">💡 Oportunidades de Negocio</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">Detección inteligente de oportunidades basada en comportamiento de clientes y tendencias del mercado</p>
+      </div>
+      <!-- KPIs Oportunidades -->
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Oportunidades Detectadas</div>
+            <span class="card-change positive">↑ 34%</span>
+          </div>
+          <div class="card-value" style="color:var(--accent-green)">12</div>
+          <div class="card-label">Nuevas esta semana</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Valor Potencial</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-purple)">$284K</div>
+          <div class="card-label">Pipeline oportunidades</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Tasa Conversión</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-blue)">28%</div>
+          <div class="card-label">Oportunidades → Clientes</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Alertas Activas</div>
+            <span class="nav-item-badge">8</span>
+          </div>
+          <div class="card-value" style="color:var(--accent-yellow)">8</div>
+          <div class="card-label">Requieren atención</div>
+        </div>
+      </div>
+
+      <!-- Lista de Oportunidades -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="chart-title">🔥 Top Oportunidades Detectadas</div>
+          <button class="header-btn" style="font-size:10px" onclick="refreshOpportunities()">🔄 Actualizar</button>
+        </div>
+        <div style="display:grid;gap:12px;margin-top:12px">
+          <!-- Oportunidad 1 -->
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:16px;border-left:3px solid var(--accent-green)">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+              <div>
+                <div style="font-size:14px;font-weight:600;color:var(--text-primary)">Biocuantum - Upselling CRM</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Cliente actual con landing exitosa. Oportunidad: Vender CRM completo</div>
+              </div>
+              <span class="badge badge-green">ALTA</span>
+            </div>
+            <div style="display:flex;gap:16px;font-size:11px;color:var(--text-secondary);margin-top:8px">
+              <div>💰 Valor: <strong style="color:var(--accent-green)">$12,500</strong></div>
+              <div>📊 Probabilidad: <strong style="color:var(--accent-blue)">85%</strong></div>
+              <div>⏰ Tiempo estimado: <strong>15 días</strong></div>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:6px">
+              <button class="header-btn" style="font-size:10px;padding:4px 8px;background:var(--accent-green);color:white;border-color:var(--accent-green)">✅ Aceptar</button>
+              <button class="header-btn" style="font-size:10px;padding:4px 8px">📋 Ver Detalles</button>
+              <button class="header-btn" style="font-size:10px;padding:4px 8px">❌ Descartar</button>
+            </div>
+          </div>
+
+          <!-- Oportunidad 2 -->
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:16px;border-left:3px solid var(--accent-blue)">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+              <div>
+                <div style="font-size:14px;font-weight:600;color:var(--text-primary)">Burbuja - Paquete Turismo Completo</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Landings funcionando bien. Oportunidad: Paquete completo (Landing + CRM + Ads)</div>
+              </div>
+              <span class="badge badge-blue">MEDIA</span>
+            </div>
+            <div style="display:flex;gap:16px;font-size:11px;color:var(--text-secondary);margin-top:8px">
+              <div>💰 Valor: <strong style="color:var(--accent-green)">$28,000</strong></div>
+              <div>📊 Probabilidad: <strong style="color:var(--accent-blue)">72%</strong></div>
+              <div>⏰ Tiempo estimado: <strong>30 días</strong></div>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:6px">
+              <button class="header-btn" style="font-size:10px;padding:4px 8px;background:var(--accent-green);color:white;border-color:var(--accent-green)">✅ Aceptar</button>
+              <button class="header-btn" style="font-size:10px;padding:4px 8px">📋 Ver Detalles</button>
+              <button class="header-btn" style="font-size:10px;padding:4px 8px">❌ Descartar</button>
+            </div>
+          </div>
+
+          <!-- Oportunidad 3 -->
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:16px;border-left:3px solid var(--accent-yellow)">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+              <div>
+                <div style="font-size:14px;font-weight:600;color:var(--text-primary)">Calzados Antonella - Expansión E-commerce</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:4px">CRM funcionando. Oportunidad: Migración a E-commerce completo + pasarela de pagos</div>
+              </div>
+              <span class="badge badge-yellow">MEDIA</span>
+            </div>
+            <div style="display:flex;gap:16px;font-size:11px;color:var(--text-secondary);margin-top:8px">
+              <div>💰 Valor: <strong style="color:var(--accent-green)">$45,000</strong></div>
+              <div>📊 Probabilidad: <strong style="color:var(--accent-blue)">65%</strong></div>
+              <div>⏰ Tiempo estimado: <strong>45 días</strong></div>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:6px">
+              <button class="header-btn" style="font-size:10px;padding:4px 8px;background:var(--accent-green);color:white;border-color:var(--accent-green)">✅ Aceptar</button>
+              <button class="header-btn" style="font-size:10px;padding:4px 8px">📋 Ver Detalles</button>
+              <button class="header-btn" style="font-size:10px;padding:4px 8px">❌ Descartar</button>
+            </div>
+          </div>
+
+          <!-- Oportunidad 4 -->
+          <div style="background:var(--bg-tertiary);border-radius:8px;padding:16px;border-left:3px solid var(--accent-red)">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+              <div>
+                <div style="font-size:14px;font-weight:600;color:var(--text-primary)">Tiempo Propiedades - Automatización Completa</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Cliente inactivo. Oportunidad: Reactivación con automatización n8n + IA</div>
+              </div>
+              <span class="badge badge-red">BAJA</span>
+            </div>
+            <div style="display:flex;gap:16px;font-size:11px;color:var(--text-secondary);margin-top:8px">
+              <div>💰 Valor: <strong style="color:var(--accent-green)">$18,000</strong></div>
+              <div>📊 Probabilidad: <strong style="color:var(--accent-blue)">45%</strong></div>
+              <div>⏰ Tiempo estimado: <strong>20 días</strong></div>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:6px">
+              <button class="header-btn" style="font-size:10px;padding:4px 8px;background:var(--accent-green);color:white;border-color:var(--accent-green)">✅ Aceptar</button>
+              <button class="header-btn" style="font-size:10px;padding:4px 8px">📋 Ver Detalles</button>
+              <button class="header-btn" style="font-size:10px;padding:4px 8px">❌ Descartar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico de Oportunidades -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <div class="chart-title">📈 Oportunidades por Etapa (Últimos 6 meses)</div>
+        </div>
+        <canvas id="opportunitiesChart" height="200"></canvas>
+      </div>
+
+      <!-- Alertas de Oportunidades -->
+      <div class="card" style="margin-top:16px;background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.2)">
+        <div class="card-header">
+          <div class="chart-title" style="color:var(--accent-yellow)">⚠️ Alertas de Oportunidades</div>
+          <span class="badge badge-yellow">8 activas</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:2">
+          <div>🔔 <strong style="color:var(--text-primary)">Tiempo Propiedades:</strong> Cliente inactivo por 5 días - Requiere seguimiento inmediato</div>
+          <div>🔔 <strong style="color:var(--text-primary)">Chocados Herrera:</strong> CPA alto en campaña - Oportunidad de optimización detectada</div>
+          <div>🔔 <strong style="color:var(--text-primary)">Florería Sol Naciente:</strong> Proyecto atrasado 23% - Riesgo de cancelación</div>
+          <div>🔔 <strong style="color:var(--text-primary)">Nuevo Lead:</strong> Clinica Dental Araucanía interesada en paquete completo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4.7 MERCADO PAGO - INTEGRACIÓN COMPLETA -->
+    <div class="section" id="s-mercadopago">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">💳 Mercado Pago - Integración Completa</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">Todos los movimientos, transacciones y reportes financieros en tiempo real</p>
+      </div>
+      <!-- KPIs Mercado Pago -->
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Balance Disponible</div>
+            <span class="card-change positive">↑ 12%</span>
+          </div>
+          <div class="card-value" style="color:var(--accent-green)">$48,750</div>
+          <div class="card-label">Disponible para retirar</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Ingresos Mes</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-blue)">$84,250</div>
+          <div class="card-label">+23% vs mes anterior</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Transacciones</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-purple)">156</div>
+          <div class="card-label">Este mes</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Tasa Aprobación</div>
+            <span class="card-change positive">↑ 3.2%</span>
+          </div>
+          <div class="card-value" style="color:var(--accent-cyan)">94.8%</div>
+          <div class="card-label">Transacciones exitosas</div>
+        </div>
+      </div>
+
+      <!-- Movimientos Recientes -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="chart-title">💰 Movimientos Recientes</div>
+          <div style="display:flex;gap:6px">
+            <button class="header-btn" style="font-size:10px;padding:4px 8px" onclick="connectMercadoPago()">🔗 Conectar API</button>
+            <button class="header-btn" style="font-size:10px;padding:4px 8px">📥 Exportar</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th><th>Concepto</th><th>Cliente</th><th>Monto</th><th>Estado</th><th>Método</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-size:11px">2026-05-07 14:32</td>
+                <td style="font-size:11px;color:var(--text-primary)"><strong>Pago Mensualidad - Biocuantum</strong></td>
+                <td style="font-size:10px;color:var(--text-secondary)">Biocuantum</td>
+                <td style="font-size:12px;color:var(--accent-green);font-weight:600">+$2,500</td>
+                <td><span class="badge badge-green">Aprobado</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">Tarjeta Crédito</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px">2026-05-07 10:15</td>
+                <td style="font-size:11px;color:var(--text-primary)"><strong>Pago Landing - Burbuja</strong></td>
+                <td style="font-size:10px;color:var(--text-secondary)">Burbuja</td>
+                <td style="font-size:12px;color:var(--accent-green);font-weight:600">+$3,800</td>
+                <td><span class="badge badge-green">Aprobado</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">Débito Automático</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px">2026-05-06 16:45</td>
+                <td style="font-size:11px;color:var(--text-primary)"><strong>Pago CRM - Calzados Antonella</strong></td>
+                <td style="font-size:10px;color:var(--text-secondary)">Calzados Antonella</td>
+                <td style="font-size:12px;color:var(--accent-green);font-weight:600">+$1,850</td>
+                <td><span class="badge badge-green">Aprobado</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">Transferencia</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px">2026-05-06 09:20</td>
+                <td style="font-size:11px;color:var(--text-primary)"><strong>Reembolso Parcial - Chocados</strong></td>
+                <td style="font-size:10px;color:var(--text-secondary)">Chocados Herrera</td>
+                <td style="font-size:12px;color:var(--accent-red);font-weight:600">-$450</td>
+                <td><span class="badge badge-yellow">Procesando</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">Reembolso</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px">2026-05-05 13:10</td>
+                <td style="font-size:11px;color:var(--text-primary)"><strong>Pago Inicial - Jorcano</strong></td>
+                <td style="font-size:10px;color:var(--text-secondary)">Jorcano</td>
+                <td style="font-size:12px;color:var(--accent-green);font-weight:600">+$4,200</td>
+                <td><span class="badge badge-green">Aprobado</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">Mercado Crédito</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px">2026-05-05 11:30</td>
+                <td style="font-size:11px;color:var(--text-primary)"><strong>Pago Mantenimiento - Farmacia Molco</strong></td>
+                <td style="font-size:10px;color:var(--text-secondary)">Farmacia Molco</td>
+                <td style="font-size:12px;color:var(--accent-green);font-weight:600">+$850</td>
+                <td><span class="badge badge-green">Aprobado</span></td>
+                <td style="font-size:10px;color:var(--text-muted)">Tarjeta Débito</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Gráficos Mercado Pago -->
+      <div class="grid grid-2">
+        <div class="chart-container">
+          <div class="chart-header">
+            <div class="chart-title">💰 Ingresos vs Egresos (Últimos 6 meses)</div>
+          </div>
+          <canvas id="mercadoPagoChart" height="200"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header">
+            <div class="chart-title">📊 Distribución por Método de Pago</div>
+          </div>
+          <canvas id="paymentMethodsChart" height="200"></canvas>
+        </div>
+      </div>
+
+      <!-- Estado de Conexión API -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-header">
+          <div class="chart-title">🔗 Estado de Conexión API Mercado Pago</div>
+          <span class="badge badge-green">Conectado</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:12px;font-size:11px">
+          <div style="background:var(--bg-tertiary);padding:10px;border-radius:6px">
+            <div style="color:var(--text-muted);margin-bottom:4px">ACCESS TOKEN</div>
+            <div style="color:var(--text-primary);font-family:monospace;font-size:10px">APP_USR-1234567890-123456-...</div>
+            <div style="margin-top:4px"><span class="badge badge-green" style="font-size:9px">✓ Válido</span></div>
+          </div>
+          <div style="background:var(--bg-tertiary);padding:10px;border-radius:6px">
+            <div style="color:var(--text-muted);margin-bottom:4px">WEBHOOK URL</div>
+            <div style="color:var(--text-primary);font-family:monospace;font-size:10px">https://api.tu.web.pro360/mp/webhook</div>
+            <div style="margin-top:4px"><span class="badge badge-green" style="font-size:9px">✓ Activo</span></div>
+          </div>
+          <div style="background:var(--bg-tertiary);padding:10px;border-radius:6px">
+            <div style="color:var(--text-muted);margin-bottom:4px">ÚLTIMA SINCRONIZACIÓN</div>
+            <div style="color:var(--text-primary)">2026-05-07 15:30:22</div>
+            <div style="margin-top:4px;color:var(--accent-green)">✓ 156 transacciones</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="header-btn" style="background:var(--accent-blue);color:white;border-color:var(--accent-blue);font-size:10px" onclick="syncMercadoPago()">🔄 Sincronizar Ahora</button>
+          <button class="header-btn" style="font-size:10px">⚙️ Configurar Webhook</button>
+          <button class="header-btn" style="font-size:10px">📊 Ver Reportes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. OPERACIONES INTERNAS -->
+    <div class="section" id="s-operations">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Operaciones Internas</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">Tareas, equipo y automatizaciones - 47 tareas</p>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Tareas Activas</div>
+            <span class="badge badge-blue">47</span>
+          </div>
+          <div style="font-size:13px">
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Completadas hoy</span>
+              <span style="color:var(--accent-green)">12</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>En progreso</span>
+              <span style="color:var(--accent-yellow)">23</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0">
+              <span>Pendientes</span>
+              <span style="color:var(--accent-red)">12</span>
+            </div>
+          </div>
+          <!-- Progress by area -->
+          <div style="margin-top:12px">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">PROGRESO POR ÁREA</div>
+            <div style="margin-bottom:8px">
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px">
+                <span>Frontend</span>
+                <span>85%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:85%;background:var(--accent-blue)"></div>
+              </div>
+            </div>
+            <div style="margin-bottom:8px">
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px">
+                <span>Backend</span>
+                <span>72%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:72%;background:var(--accent-green)"></div>
+              </div>
+            </div>
+            <div style="margin-bottom:8px">
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px">
+                <span>Marketing</span>
+                <span>91%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:91%;background:var(--accent-yellow)"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px">
+                <span>IA/Automatización</span>
+                <span>68%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:68%;background:var(--accent-purple)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="chart-title">🚦 Semáforos de Proyectos</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
+            <div style="background:var(--bg-tertiary);border-radius:8px;padding:12px;display:flex;align-items:center;gap:10px">
+              <span class="semaphore semaphore-green" style="width:12px;height:12px"></span>
+              <div>
+                <div style="font-size:13px;font-weight:600">Biocuantum</div>
+                <div style="font-size:11px;color:var(--text-muted)">Landing + CRM</div>
+              </div>
+            </div>
+            <div style="background:var(--bg-tertiary);border-radius:8px;padding:12px;display:flex;align-items:center;gap:10px">
+              <span class="semaphore semaphore-green" style="width:12px;height:12px"></span>
+              <div>
+                <div style="font-size:13px;font-weight:600">Calzados Antonella</div>
+                <div style="font-size:11px;color:var(--text-muted)">E-commerce</div>
+              </div>
+            </div>
+            <div style="background:var(--bg-tertiary);border-radius:8px;padding:12px;display:flex;align-items:center;gap:10px">
+              <span class="semaphore semaphore-yellow" style="width:12px;height:12px"></span>
+              <div>
+                <div style="font-size:13px;font-weight:600">Chocados Herrera</div>
+                <div style="font-size:11px;color:var(--text-muted)">Landing page</div>
+              </div>
+            </div>
+            <div style="background:var(--bg-tertiary);border-radius:8px;padding:12px;display:flex;align-items:center;gap:10px">
+              <span class="semaphore semaphore-red" style="width:12px;height:12px"></span>
+              <div>
+                <div style="font-size:13px;font-weight:600">Florería Sol Naciente</div>
+                <div style="font-size:11px;color:var(--text-muted)">Planning</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Automatizaciones</div>
+            <span class="badge badge-green">8 activas</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary)">
+            <div style="padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">✅ Reportes semanales auto</div>
+            <div style="padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">✅ Alertas Slack/Discord</div>
+            <div style="padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">✅ Emails automáticos</div>
+            <div style="padding:6px 0;">🟡 Workflows n8n (3 activos)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. FINANZAS -->
+    <div class="section" id="s-finance">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Finanzas</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">Revenue, gastos y rentabilidad - Margen 33.8%</p>
+      </div>
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">MRR</div>
+            <span class="card-change positive">↑ 8.3%</span>
+          </div>
+          <div class="card-value">$312K</div>
+          <div class="card-label">Monthly Recurring Revenue</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Profit Margin</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-green)">33.8%</div>
+          <div class="card-label">Margen de ganancia</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Burn Rate</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-red)">$18.2K</div>
+          <div class="card-label">Gastos mensuales</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Runway</div>
+          </div>
+          <div class="card-value" style="color:var(--accent-purple)">14 meses</div>
+          <div class="card-label">Con capital actual</div>
+        </div>
+      </div>
+      <!-- Gráfico de ingresos vs gastos -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <div class="chart-title">💰 Ingresos vs Gastos (Últimos 6 meses)</div>
+        </div>
+        <canvas id="financeChart" height="200"></canvas>
+      </div>
+      <!-- Desglose de gastos -->
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="chart-title">📊 Gastos por Categoría</div>
+          </div>
+          <div style="font-size:13px">
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Nómina</span>
+              <span style="font-weight:600">$12,400</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Ads Internos</span>
+              <span style="font-weight:600">$2,800</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Software</span>
+              <span style="font-weight:600">$1,200</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Freelancers</span>
+              <span style="font-weight:600">$980</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0">
+              <span>Impuestos</span>
+              <span style="font-weight:600">$820</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="chart-title">📈 EBITDA</div>
+          </div>
+          <div style="text-align:center;padding:20px 0">
+            <div style="font-size:36px;font-weight:700;color:var(--accent-green)">$28,450</div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-top:8px">Earnings Before Interest, Taxes, Depreciation and Amortization</div>
+            <div style="margin-top:16px">
+              <span class="badge badge-green" style="font-size:12px">+15% vs mes anterior</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. IA + AUTOMATIZACIONES -->
+    <div class="section" id="s-ai">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">🤖 IA + Automatizaciones</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">192 agentes IA, insights y automatizaciones activas</p>
+      </div>
+      <div class="grid grid-3">
+        <div class="card" style="border-color:var(--accent-purple)">
+          <div class="card-header">
+            <div class="card-title" style="color:var(--accent-purple)">🧠 Agentes IA Activos</div>
+            <span class="badge badge-purple">192</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary)">
+            <div style="padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">✅ <strong>128</strong> procesando tareas</div>
+            <div style="padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">🟡 <strong>44</strong> en espera</div>
+            <div style="padding:6px 0;">🔴 <strong>20</strong> con errores</div>
+          </div>
+        </div>
+        <div class="card" style="border-color:var(--accent-cyan)">
+          <div class="card-header">
+            <div class="card-title" style="color:var(--accent-cyan)">💡 IA Insights</div>
+            <span class="badge badge-blue">3 nuevos</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary)">
+            <div style="padding:8px 0;border-bottom:1px solid rgba(42,42,58,0.5);border-left:3px solid var(--accent-red);padding-left:8px">
+              <strong style="color:var(--text-primary)">Riesgo churn:</strong> Cliente "Chocados" detectado
+            </div>
+            <div style="padding:8px 0;border-bottom:1px solid rgba(42,42,58,0.5);border-left:3px solid var(--accent-green);padding-left:8px">
+              <strong style="color:var(--text-primary)">Oportunidad:</strong> Mejorar ROAS en "Burbuja"
+            </div>
+            <div style="padding:8px 0;border-left:3px solid var(--accent-yellow);padding-left:8px">
+              <strong style="color:var(--text-primary)">Alerta:</strong> CPA alto en campaña Black Friday
+            </div>
+          </div>
+        </div>
+        <div class="card" style="border-color:var(--accent-green)">
+          <div class="card-header">
+            <div class="card-title" style="color:var(--accent-green)">⚡ Automatizaciones</div>
+            <span class="badge badge-green">8 activas</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary)">
+            <div style="padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">✅ Reportes semanales auto</div>
+            <div style="padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">✅ Alertas Slack/Discord</div>
+            <div style="padding:6px 0;">✅ Emails automáticos</div>
+          </div>
+        </div>
+      </div>
+      <!-- Lista de agentes IA -->
+      <div class="table-container">
+        <div class="table-header">
+          <div class="table-title">🤖 Top Agentes IA por Actividad (192 total)</div>
+          <button class="header-btn">Ver todos (192)</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Agente</th>
+              <th>División</th>
+              <th>Tareas Completadas</th>
+              <th>Estado</th>
+              <th>Última Actividad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Data Consolidation Agent</strong></td>
+              <td><span class="badge badge-green">Specialized</span></td>
+              <td>1,247</td>
+              <td><span class="badge badge-green">Activo</span></td>
+              <td style="font-size:11px;color:var(--text-muted)">Hace 2 min</td>
+            </tr>
+            <tr>
+              <td><strong>Report Distribution Agent</strong></td>
+              <td><span class="badge badge-green">Specialized</span></td>
+              <td>892</td>
+              <td><span class="badge badge-green">Activo</span></td>
+              <td style="font-size:11px;color:var(--text-muted)">Hace 5 min</td>
+            </tr>
+            <tr>
+              <td><strong>Analytics Reporter</strong></td>
+              <td><span class="badge badge-blue">Support</span></td>
+              <td>634</td>
+              <td><span class="badge badge-green">Activo</span></td>
+              <td style="font-size:11px;color:var(--text-muted)">Hace 12 min</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- IA Recomendaciones -->
+      <div class="card">
+        <div class="card-header">
+          <div class="chart-title">🎯 Recomendaciones IA</div>
+          <button class="header-btn" style="padding:4px 8px;font-size:11px">🔄 Actualizar</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px">
+          <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:12px">
+            <div style="font-size:12px;font-weight:600;color:var(--accent-blue);margin-bottom:6px">📈 Predicción ROAS</div>
+            <div style="font-size:11px;color:var(--text-secondary)">Se proyecta un incremento del 12% en ROAS para Biocuantum basado en tendencias históricas</div>
+          </div>
+          <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:12px">
+            <div style="font-size:12px;font-weight:600;color:var(--accent-yellow);margin-bottom:6px">⚠️ Detección Anomalías</div>
+            <div style="font-size:11px;color:var(--text-secondary)">CTR bajo detectado en campaña Google Search Chocados. Recomendación: Actualizar creativos</div>
+          </div>
+          <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:12px">
+            <div style="font-size:12px;font-weight:600;color:var(--accent-green);margin-bottom:6px">✅ Mejor Horario</div>
+            <div style="font-size:11px;color:var(--text-secondary)">Mejor horario para publicar en Meta Ads: 8-10 PM, basado en comportamiento de audiencia</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. PROYECTOS -->
+    <div class="section" id="s-projects">
+      <div style="margin-bottom:24px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Proyectos (31 total)</h1>
+          <p style="font-size:13px;color:var(--text-secondary)">D:\AI_Agency\projects\clientes\ - 31 proyectos indexados</p>
+        </div>
+        <button class="header-btn" style="background:var(--accent-blue);color:white;border-color:var(--accent-blue)">
+          <span>🔄</span> Recargar
+        </button>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Total Proyectos</div>
+          </div>
+          <div class="card-value">31</div>
+          <div class="card-label">En D:\AI_Agency\projects\clientes\</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Por Etapa</div>
+          </div>
+          <div id="proj-stages" style="font-size:11px;margin-top:8px">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Landing (12)</span><span class="badge badge-blue">38.7%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>CRM (8)</span><span class="badge badge-green">25.8%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Backend (6)</span><span class="badge badge-yellow">19.4%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+              <span>Planning (5)</span><span class="badge badge-purple">16.1%</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Archivos Totales</div>
+          </div>
+          <div class="card-value">1,247</div>
+          <div class="card-label">Contenido indexado</div>
+        </div>
+      </div>
+      <!-- Detalle de proyectos -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-header">
+          <div class="chart-title">📁 Detalle de Proyectos (Muestra)</div>
+        </div>
+        <div style="margin-bottom:12px">
+          <input type="text" placeholder="Buscar proyecto..." style="width:100%;padding:8px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-size:11px" oninput="filterProjects(this.value)">
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th><th>Etapa</th><th>Progreso</th><th>Archivos</th><th>JS</th><th>HTML</th><th>CSS</th><th>Fecha</th>
+              </tr>
+            </thead>
+              <tbody id="projects-tbody">
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\biocuantum" style="color:var(--accent-blue);text-decoration:none"><strong>Biocuantum</strong></a></td>
+                  <td><span class="badge badge-blue">Landing</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-blue);width:92%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">92%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">48</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">12</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">8</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">6</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-15</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\burbuja" style="color:var(--accent-blue);text-decoration:none"><strong>Burbuja</strong></a></td>
+                  <td><span class="badge badge-green">Turismo</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-green);width:85%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">85%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">36</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">10</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">6</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">4</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-03-10</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\cafe-huiti" style="color:var(--accent-blue);text-decoration:none"><strong>Café Huiti</strong></a></td>
+                  <td><span class="badge badge-yellow">Planning</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-yellow);width:40%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">40%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">15</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">3</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">1</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-05-05</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\calistenia-app" style="color:var(--accent-blue);text-decoration:none"><strong>Calistenia App</strong></a></td>
+                  <td><span class="badge badge-blue">App</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-blue);width:65%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">65%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">28</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">8</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">5</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">3</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-20</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\calzados-antonella" style="color:var(--accent-blue);text-decoration:none"><strong>Calzados Antonella</strong></a></td>
+                  <td><span class="badge badge-green">CRM</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-green);width:78%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">78%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">32</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">9</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">7</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">5</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-03-20</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\center full coleccion" style="color:var(--accent-blue);text-decoration:none"><strong>Center Full Colección</strong></a></td>
+                  <td><span class="badge badge-purple">Diseño</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-purple);width:55%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">55%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">22</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">6</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">4</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-28</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\chocados herrera" style="color:var(--accent-blue);text-decoration:none"><strong>Chocados Herrera</strong></a></td>
+                  <td><span class="badge badge-yellow">Planning</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-yellow);width:45%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">45%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">18</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">4</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">3</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-05-01</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\clinica dental araucania" style="color:var(--accent-blue);text-decoration:none"><strong>Clínica Dental Araucanía</strong></a></td>
+                  <td><span class="badge badge-blue">Landing</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-blue);width:80%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">80%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">30</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">8</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">5</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">3</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-03-15</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\de la cris empanadas" style="color:var(--accent-blue);text-decoration:none"><strong>De la Cris Empanadas</strong></a></td>
+                  <td><span class="badge badge-yellow">Planning</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-yellow);width:60%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">60%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">25</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">7</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">4</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-10</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\farmacia molco" style="color:var(--accent-blue);text-decoration:none"><strong>Farmacia Molco</strong></a></td>
+                  <td><span class="badge badge-green">Landing</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-green);width:90%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">90%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">45</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">11</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">8</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">6</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-05</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\floreria sol naciente" style="color:var(--accent-blue);text-decoration:none"><strong>Florería Sol Naciente</strong></a></td>
+                  <td><span class="badge badge-red">Planning</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-red);width:30%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">30%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">12</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">3</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">1</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-05-06</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\gimnacios web" style="color:var(--accent-blue);text-decoration:none"><strong>Gimnasios Web</strong></a></td>
+                  <td><span class="badge badge-blue">Landing</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-blue);width:75%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">75%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">28</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">7</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">5</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">3</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-03-25</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\jorcano" style="color:var(--accent-blue);text-decoration:none"><strong>Jorcano</strong></a></td>
+                  <td><span class="badge badge-green">CRM</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-green);width:82%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">82%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">35</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">9</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">6</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">4</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-18</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\landing page web, open code boot" style="color:var(--accent-blue);text-decoration:none"><strong>Landing Page Web, Open Code Boot</strong></a></td>
+                  <td><span class="badge badge-blue">Landing</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-blue);width:88%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">88%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">40</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">10</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">7</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">5</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-22</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\pack todo en uno" style="color:var(--accent-blue);text-decoration:none"><strong>Pack Todo en Uno</strong></a></td>
+                  <td><span class="badge badge-purple">Paquete</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-purple);width:95%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">95%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">50</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">13</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">9</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">7</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-01</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\plantillas-100" style="color:var(--accent-blue);text-decoration:none"><strong>Plantillas 100</strong></a></td>
+                  <td><span class="badge badge-yellow">Templates</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-yellow);width:70%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">70%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">32</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">8</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">6</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">4</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-03-30</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\proyectos" style="color:var(--accent-blue);text-decoration:none"><strong>Proyectos (Subproyectos)</strong></a></td>
+                  <td><span class="badge badge-blue">Varios</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-blue);width:50%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">50%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">60</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">15</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">10</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">8</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-05-07</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\san bernardo casa" style="color:var(--accent-blue);text-decoration:none"><strong>San Bernardo Casa</strong></a></td>
+                  <td><span class="badge badge-yellow">Planning</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-yellow);width:45%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">45%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">20</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">5</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">3</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-05-03</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\surmuebles" style="color:var(--accent-blue);text-decoration:none"><strong>Surmuebles</strong></a></td>
+                  <td><span class="badge badge-green">E-commerce</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-green);width:76%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">76%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">33</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">8</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">6</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">4</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-12</td>
+                </tr>
+                <tr>
+                  <td><a href="D:\AI_Agency\projects\clientes\tiempo propiedades" style="color:var(--accent-blue);text-decoration:none"><strong>Tiempo Propiedades</strong></a></td>
+                  <td><span class="badge badge-blue">Real Estate</span></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;background:var(--accent-blue);width:88%"></div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-secondary)">88%</span>
+                    </div>
+                  </td>
+                  <td style="font-size:10px;color:var(--text-secondary)">42</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">11</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">7</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">5</td>
+                  <td style="font-size:10px;color:var(--text-secondary)">2026-04-25</td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. AGENTES -->
+    <div class="section" id="s-agents">
+      <div style="margin-bottom:24px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Agentes Disponibles (192)</h1>
+          <p style="font-size:13px;color:var(--text-secondary)">D:\AI_Agency\agents\ - 192 agentes cargados</p>
+        </div>
+        <button class="header-btn" style="background:var(--accent-blue);color:white;border-color:var(--accent-blue)">
+          <span>🔄</span> Recargar
+        </button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🤖 Agentes por División</div>
+          </div>
+          <div style="font-size:12px">
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Specialized</span><span class="badge badge-green">48</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Support</span><span class="badge badge-blue">32</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Marketing</span><span class="badge badge-yellow">28</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+              <span>Development</span><span class="badge badge-purple">24</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+              <span>Otros</span><span class="badge">60</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📊 Actividad Reciente</div>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary)">
+            <div style="padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">✅ Data Consolidation: 1,247 tareas</div>
+            <div style="padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">✅ Report Distribution: 892 tareas</div>
+            <div style="padding:6px 0;border-bottom:1px solid rgba(42,42,58,0.5)">✅ Analytics: 634 reportes</div>
+            <div style="padding:6px 0;">🟡 44 agentes en espera</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🔗 Acceso Rápido</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <a href="http://localhost:3000/control-panel.html" style="color:var(--accent-blue);text-decoration:none;font-size:12px;padding:6px;background:var(--bg-tertiary);border-radius:6px">📋 Control Panel Original</a>
+            <a href="D:\AI_Agency\agency-resources\INDICE-MD.md" style="color:var(--accent-green);text-decoration:none;font-size:12px;padding:6px;background:var(--bg-tertiary);border-radius:6px">📄 Índice Maestro</a>
+            <a href="D:\AI_Agency\INDICE-MAESTRO.md" style="color:var(--accent-purple);text-decoration:none;font-size:12px;padding:6px;background:var(--bg-tertiary);border-radius:6px">📑 Índice D:\AI_Agency\</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. RECURSOS -->
+    <div class="section" id="s-resources">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Recursos y APIs (30+ repos)</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">D:\AI_Agency\agency-resources\ - 30+ .md files, 19 skills</p>
+      </div>
+      <div style="display:grid;gap:16px" id="resourcesContent">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🔑 APIs y Credenciales (14)</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px;margin-top:12px">
+            <div style="background:var(--bg-tertiary);border-radius:6px;padding:10px;font-size:11px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <strong style="color:var(--text-primary)">Pexels API</strong>
+                <button class="header-btn" style="padding:2px 8px;font-size:10px" onclick="copyToClipboard('7i9dApxgbHut2gGY5ngE...')">📋 Copiar</button>
+              </div>
+              <div style="color:var(--text-muted)">Videos 4K y fotos stock</div>
+            </div>
+            <div style="background:var(--bg-tertiary);border-radius:6px;padding:10px;font-size:11px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <strong style="color:var(--text-primary)">ElevenLabs</strong>
+                <button class="header-btn" style="padding:2px 8px;font-size:10px" onclick="copyToClipboard('sk_91d1f1e9...')">📋 Copiar</button>
+              </div>
+              <div style="color:var(--text-muted)">Clonación de voz y TTS</div>
+            </div>
+            <div style="background:var(--bg-tertiary);border-radius:6px;padding:10px;font-size:11px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <strong style="color:var(--text-primary)">GitHub Token</strong>
+                <button class="header-btn" style="padding:2px 8px;font-size:10px" onclick="copyToClipboard('github_pat_11CA2...')">📋 Copiar</button>
+              </div>
+              <div style="color:var(--text-muted)">Acceso a repos</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🐙 Repos Clonados (9 carpetas)</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;margin-top:12px">
+            <div style="background:var(--bg-tertiary);border-radius:6px;padding:10px;font-size:11px">
+              <strong style="color:var(--accent-blue)">01-streaming-movies</strong>
+              <div style="color:var(--text-muted);margin-top:4px">Movies/streaming repos</div>
+            </div>
+            <div style="background:var(--bg-tertiary);border-radius:6px;padding:10px;font-size:11px">
+              <strong style="color:var(--accent-green)">04-viral-hooks</strong>
+              <div style="color:var(--text-muted);margin-top:4px">ViralCutter, Hyperframes</div>
+            </div>
+            <div style="background:var(--bg-tertiary);border-radius:6px;padding:10px;font-size:11px">
+              <strong style="color:var(--accent-yellow)">03-marketing-skills</strong>
+              <div style="color:var(--text-muted);margin-top:4px">3 repos marketing</div>
+            </div>
+            <div style="background:var(--bg-tertiary);border-radius:6px;padding:10px;font-size:11px">
+              <strong style="color:var(--accent-purple)">08-n8n-automation</strong>
+              <div style="color:var(--text-muted);margin-top:4px">n8n + n8n-skills</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📄 Skills (19)</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px">
+            <span class="badge badge-blue">360</span>
+            <span class="badge badge-green">algorithmic-art</span>
+            <span class="badge badge-yellow">brand-guidelines</span>
+            <span class="badge badge-purple">canvas-design</span>
+            <span class="badge badge-blue">frontend-design</span>
+            <span class="badge badge-green">mcp-builder</span>
+            <span class="badge badge-yellow">pdf</span>
+            <span class="badge badge-purple">xlsx</span>
+            <span class="badge badge-blue">docx</span>
+            <span class="badge badge-green">web-artifacts-builder</span>
+            <span class="badge badge-yellow">+8 más</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. REPOS -->
+    <div class="section" id="s-repos">
+      <div style="margin-bottom:24px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Repos Clonados (9 carpetas)</h1>
+          <p style="font-size:13px;color:var(--text-secondary)">D:\AI_Agency\repos\ - Organizados por categoría</p>
+        </div>
+        <button class="header-btn" style="background:var(--accent-blue);color:white;border-color:var(--accent-blue)">
+          <span>➕</span> Clonar Más
+        </button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:16px">
+        <div class="card" style="border-left:3px solid var(--accent-blue)">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--accent-blue)">01-streaming-movies</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Movies/streaming repos</div>
+            </div>
+            <span class="badge badge-blue">9 archivos</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary)">
+            <div style="padding:4px 0;">📂 awesome-avatar, avatar-gen</div>
+            <div style="padding:4px 0;">🎬 3d-gallery, visual-effects</div>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent-green)">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--accent-green)">04-viral-hooks</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Ganchos virales</div>
+            </div>
+            <span class="badge badge-green">3 repos</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary)">
+            <div style="padding:4px 0;">🎬 ViralCutter</div>
+            <div style="padding:4px 0;">🤖 Hyperframes (HeyGen)</div>
+            <div style="padding:4px 0;">🪝 Awesome Uniswap Hooks</div>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent-yellow)">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--accent-yellow)">03-marketing-skills</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Habilidades marketing</div>
+            </div>
+            <span class="badge badge-yellow">3 repos</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary)">
+            <div style="padding:4px 0;">📊 coreyhaines31/marketingskills</div>
+            <div style="padding:4px 0;">📊 kostja94/marketing-skills</div>
+            <div style="padding:4px 0;">📊 mysticaltech/marketingskills</div>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent-purple)">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--accent-purple)">08-n8n-automation</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Automatización n8n</div>
+            </div>
+            <span class="badge badge-purple">2 repos</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary)">
+            <div style="padding:4px 0;">⚡ n8n-io/n8n</div>
+            <div style="padding:4px 0;">⚡ czlonkowski/n8n-skills</div>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent-cyan)">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--accent-cyan)">09-motion-3d</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Framer Motion 3D</div>
+            </div>
+            <span class="badge badge-blue">1 repo</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary)">
+            <div style="padding:4px 0;">🎨 motiondivision/motion</div>
+            <div style="padding:4px 0;">🎬 framer-motion, react-three-fiber</div>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent-orange)">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--accent-orange)">05-landing-pages</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Landing pages HTML</div>
+            </div>
+            <span class="badge badge-orange">Múltiples</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary)">
+            <div style="padding:4px 0;">📄 HTML templates</div>
+            <div style="padding:4px 0;">🎨 One Page Love, Land-book</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. CONFIGURACIÓN -->
+    <div class="section" id="s-settings">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Configuración del Sistema</h1>
+        <p style="font-size:13px;color:var(--text-secondary)">D:\AI_Agency\agency-hub\ - Backend puerto 3000</p>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📂 Estructura de Archivos</div>
+          </div>
+          <div style="font-size:11px;font-family:monospace;line-height:1.8">
+            <div><strong>D:\AI_Agency\</strong></div>
+            <div style="padding-left:12px">📂 agency-hub/ (Backend + Frontend)</div>
+            <div style="padding-left:12px">📂 agency-resources/ (226 .md + 19 skills)</div>
+            <div style="padding-left:12px">📂 agents/ (192 agentes)</div>
+            <div style="padding-left:12px">📂 projects/ (31 proyectos)</div>
+            <div style="padding-left:12px">📂 clients/ (PDFs, DOCX)</div>
+            <div style="padding-left:12px">📂 tools/ (Aion, Hermes)</div>
+            <div style="padding-left:12px">📂 repos/ (9 carpetas clonadas)</div>
+            <div style="padding-left:12px">📂 resources/ (docs, backups)</div>
+            <div style="padding-left:12px">📄 INDICE-MAESTRO.md</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🔗 Conexiones</div>
+          </div>
+          <div style="font-size:12px;line-height:2">
+            <div><strong>Backend:</strong> <span style="color:var(--accent-green)">● http://localhost:3000</span></div>
+            <div><strong>Dashboard Premium:</strong> <a href="http://localhost:3000/dashboard-premium.html" style="color:var(--accent-blue)">v3.0 (actual)</a></div>
+            <div><strong>Control Panel:</strong> <a href="http://localhost:3000/control-panel.html" style="color:var(--accent-blue)">v2.0 (original)</a></div>
+            <div><strong>Recursos JSON:</strong> <a href="http://localhost:3000/resources.json" style="color:var(--accent-purple)">API endpoints</a></div>
+            <div><strong>Base de Datos:</strong> <span style="color:var(--text-muted)">D:\AI_Agency\agency-hub\db.sqlite3</span></div>
+            <div><strong>Repos:</strong> <span style="color:var(--text-muted)">D:\AI_Agency\repos\ (9 carpetas)</span></div>
+          </div>
+          <button class="header-btn" style="width:100%;margin-top:12px;background:var(--accent-blue);color:white;border-color:var(--accent-blue)">
+            ⚙️ Verificar Todas las Conexiones
+          </button>
+        </div>
+      </div>
+      <!-- Footer Info -->
+      <div class="card" style="margin-top:24px">
+        <div class="card-header">
+          <div class="card-title">📊 Accesos Directos - Todo en Uno</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+          <a href="http://localhost:3000/dashboard-premium.html" style="padding:8px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:6px;color:var(--accent-blue);text-decoration:none;font-size:11px;text-align:center">
+            📊 Dashboard Premium v3.0<br><span style="font-size:10px;color:var(--text-muted)">7 Módulos Integrados</span>
+          </a>
+          <a href="D:\AI_Agency\INDICE-MAESTRO.md" style="padding:8px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:6px;color:var(--accent-green);text-decoration:none;font-size:11px;text-align:center">
+            📑 Índice Maestro<br><span style="font-size:10px;color:var(--text-muted)">D:\AI_Agency\</span>
+          </a>
+          <a href="D:\AI_Agency\agency-resources\INDICE-MD.md" style="padding:8px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:6px;color:var(--accent-yellow);text-decoration:none;font-size:11px;text-align:center">
+            📄 Recursos MD<br><span style="font-size:10px;color:var(--text-muted)">226 archivos</span>
+          </a>
+          <a href="http://localhost:3000/control-panel.html" style="padding:8px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:6px;color:var(--accent-purple);text-decoration:none;font-size:11px;text-align:center">
+            📋 Control Panel<br><span style="font-size:10px;color:var(--text-muted)">12 secciones</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Impulsado por <a href="https://www.instagram.com/tu.web.pro360/?hl=en">@tu.web.pro360</a> | 
+    Agencia 360 - Todos los sistemas integrados | 
+    Dashboard v3.0 Premium | 
+    <a href="http://localhost:3000/dashboard-premium.html">Abrir Dashboard</a> | 
+    <a href="D:\AI_Agency\INDICE-MAESTRO.md">Ver Índice</a></p>
+  </div>
+    </div>
+  </div>
+</div>
+
+<script src="dashboard-premium.js"></script>
+
+<!-- Footer obligatorio -->
+<footer style="margin-top:40px;padding:20px;text-align:center;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);">
+  Impulsado por <a href="https://www.instagram.com/tu.web.pro360/?hl=en" style="color:var(--accent-blue);text-decoration:none">@tu.web.pro360</a>
+</footer>
+</body>
+</html>
+
+
+

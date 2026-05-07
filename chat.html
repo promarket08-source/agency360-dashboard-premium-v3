@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agencia 360 - Chat con IA</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; background: #0f172a; color: #e2e8f0 }
+    .container { max-width: 800px; margin: 0 auto }
+    h1 { color: #22d3ee; margin-bottom: 20px }
+    #chat { background: #1e293b; border-radius: 8px; padding: 20px; height: 400px; overflow-y: auto; margin-bottom: 10px }
+    .msg { padding: 10px; margin: 5px 0; border-radius: 5px }
+    .user { background: #1e40af; text-align: right }
+    .ai { background: #166534; text-align: left }
+    .system { background: #374151; text-align: center; font-size: 0.9em }
+    #input-area { display: flex; gap: 10px }
+    #prompt { flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #334155; background: #1e293b; color: white }
+    button { padding: 10px 20px; background: #22d3ee; border: none; border-radius: 5px; color: white; cursor: pointer }
+    button:hover { background: #0ea5e9 }
+    .status { margin-top: 10px; padding: 10px; border-radius: 5px; background: #1e293b; font-size: 0.9em }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 Chat con IA - Agencia 360</h1>
+    
+    <div id="chat">
+      <div class="msg system">Conectando al cerebro OpenCode vía Hub...</div>
+    </div>
+    
+    <div id="input-area">
+      <input type="text" id="prompt" placeholder="Escribe tu prompt aquí... (ej: Usa el agente Content Creator para crear una campaña)" />
+      <button onclick="sendPrompt()">Enviar</button>
+    </div>
+    
+    <div class="status" id="status">Listo para usar 154 agentes disponibles</div>
+  </div>
+
+  <script>
+    const HUB_URL = 'http://localhost:3000';
+    const chatDiv = document.getElementById('chat');
+    const promptInput = document.getElementById('prompt');
+    const statusDiv = document.getElementById('status');
+    
+    function addMessage(text, type = 'system') {
+      const div = document.createElement('div');
+      div.className = 'msg ' + type;
+      div.textContent = text;
+      chatDiv.appendChild(div);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+    
+    async function sendPrompt() {
+      const prompt = promptInput.value.trim();
+      if (!prompt) return;
+      
+      addMessage(prompt, 'user');
+      promptInput.value = '';
+      statusDiv.textContent = 'Enviando a OpenCode...';
+      
+      try {
+        const response = await fetch(`${HUB_URL}/opened-code/prompt`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, context: { source: 'chat-ui', timestamp: new Date().toISOString() } })
+        });
+        
+        if (!response.ok) throw new Error(`Error ${response.status}`);
+        
+        const data = await response.json();
+        addMessage(JSON.stringify(data, null, 2), 'ai');
+        statusDiv.textContent = '✅ Respuesta recibida';
+      } catch (err) {
+        addMessage('Error: ' + err.message, 'system');
+        statusDiv.textContent = '❌ Error: ' + err.message;
+      }
+    }
+    
+    promptInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendPrompt();
+    });
+    
+    // Load agents on start
+    fetch(`${HUB_URL}/agents`)
+      .then(r => r.json())
+      .then(agents => {
+        addMessage(`✅ ${agents.length} agentes disponibles. Escribe un prompt para comenzar.`, 'system');
+        statusDiv.textContent = `Listo | ${agents.length} agentes | Hub: ${HUB_URL}`;
+      })
+      .catch(err => {
+        addMessage('❌ Error conectando al Hub: ' + err.message, 'system');
+        statusDiv.textContent = '❌ Hub no disponible';
+      });
+  </script>
+</body>
+</html>

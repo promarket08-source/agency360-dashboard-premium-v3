@@ -1,0 +1,15 @@
+{
+  "name": "agency-hub-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.9.0",
+    "dotenv": "^17.4.2",
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2"
+  }
+}

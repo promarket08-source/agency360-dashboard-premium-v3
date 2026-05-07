@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agencia 360 - Control Panel</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #c9d1d9; min-height: 100vh; }
+.header { background: #161b22; border-bottom: 1px solid #30363d; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+.header h1 { font-size: 16px; font-weight: 600; color: #58a6ff; }
+.header .subtitle { font-size: 11px; color: #8b949e; }
+.nav { background: #161b22; border-bottom: 1px solid #30363d; padding: 0 20px; display: flex; gap: 0; }
+.nav-item { padding: 10px 16px; font-size: 11px; color: #8b949e; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+.nav-item:hover { color: #c9d1d9; }
+.nav-item.active { color: #58a6ff; border-bottom-color: #58a6ff; }
+.container { padding: 20px; max-width: 1400px; margin: 0 auto; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+.card h3 { font-size: 12px; color: #8b949e; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.card .value { font-size: 28px; font-weight: 700; color: #58a6ff; margin-bottom: 4px; }
+.card .label { font-size: 11px; color: #8b949e; }
+table { width: 100%; border-collapse: collapse; font-size: 11px; }
+th { text-align: left; padding: 8px; color: #8b949e; border-bottom: 1px solid #30363d; font-weight: 600; }
+td { padding: 8px; border-bottom: 1px solid #21262d; }
+tr:hover { background: #1c2128; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; }
+.badge-blue { background: #1f6feb22; color: #58a6ff; border: 1px solid #1f6feb44; }
+.badge-green { background: #23863622; color: #3fb950; border: 1px solid #23863644; }
+.badge-yellow { background: #d2992222; color: #d29922; border: 1px solid #d2992244; }
+.badge-red { background: #da363322; color: #f85149; border: 1px solid #da363344; }
+.btn { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid #30363d; background: #21262d; color: #c9d1d9; transition: all 0.2s; }
+.btn:hover { background: #30363d; }
+.btn-primary { background: #238636; border-color: #238636; color: #fff; }
+.btn-primary:hover { background: #2ea043; }
+.section { display: none; }
+.section.active { display: block; }
+.log-entry { padding: 8px; border-bottom: 1px solid #21262d; font-size: 11px; display: flex; gap: 8px; align-items: start; }
+.log-time { color: #8b949e; font-family: monospace; white-space: nowrap; }
+.log-source { font-weight: 600; min-width: 80px; }
+.log-message { color: #c9d1d9; flex: 1; }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-size: 11px; color: #8b949e; margin-bottom: 4px; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 11px; }
+.form-group textarea { min-height: 80px; resize: vertical; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>🚀 Agencia 360 - Control Panel</h1>
+      <div class="subtitle">Conectado a OpenCode AI • <span id="header-agents">192</span> Agentes • 23 Proyectos • D:\AI_Agency</div>
+    </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span style="font-size:11px;color:#8b949e" id="status">● Desconectado</span>
+    <button class="btn" onclick="testConnection()">Probar Conexión</button>
+  </div>
+</div>
+
+  <div class="nav">
+    <div class="nav-item active" data-section="dashboard" onclick="showSection('dashboard')">Dashboard</div>
+    <div class="nav-item" data-section="projects" onclick="showSection('projects')">Proyectos</div>
+    <div class="nav-item" data-section="agents" onclick="showSection('agents')">Agentes</div>
+    <div class="nav-item" data-section="campaigns" onclick="showSection('campaigns')">Campañas</div>
+    <div class="nav-item" data-section="todos" onclick="showSection('todos')">TODO</div>
+    <div class="nav-item" data-section="modules" onclick="showSection('modules')">Módulos</div>
+    <div class="nav-item" data-section="templates" onclick="showSection('templates')">Templates</div>
+    <div class="nav-item" data-section="resources" onclick="showSection('resources')">Recursos</div>
+    <div class="nav-item" data-section="openai" onclick="showSection('openai')">OpenCode AI</div>
+    <div class="nav-item" data-section="telegram" onclick="showSection('telegram')">Telegram</div>
+    <div class="nav-item" data-section="logs" onclick="showSection('logs')">Logs</div>
+    <div class="nav-item" data-section="config" onclick="showSection('config')">Configuración</div>
+  </div>
+
+<div class="container">
+  <!-- Dashboard -->
+  <div class="section active" id="s-dashboard">
+    <div class="grid">
+      <div class="card">
+        <h3>Agentes Cargados</h3>
+        <div class="value" id="dash-agents">0</div>
+        <div class="label">En 11 divisiones</div>
+      </div>
+      <div class="card">
+        <h3>Campañas Activas</h3>
+        <div class="value" id="dash-campaigns">0</div>
+        <div class="label">En progreso</div>
+      </div>
+      <div class="card">
+        <h3>Tareas Pendientes</h3>
+        <div class="value" id="dash-tasks">0</div>
+        <div class="label">Por ejecutar</div>
+      </div>
+      <div class="card">
+        <h3>Estado OpenCode</h3>
+        <div class="value" style="font-size:18px" id="dash-opencode">⚫</div>
+        <div class="label">http://127.0.0.1:8000</div>
+      </div>
+    </div>
+    
+    <div class="card" style="margin-bottom:16px">
+      <h3>Acciones Rápidas</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <button class="btn btn-primary" onclick="showSection('campaigns');document.getElementById('campaign-name').focus()">Nueva Campaña</button>
+        <button class="btn" onclick="showSection('openai')">Probar OpenCode</button>
+        <button class="btn" onclick="loadAgents()">Recargar Agentes</button>
+        <button class="btn" onclick="showSection('telegram')">Config Telegram</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Actividad Reciente</h3>
+      <div id="dash-activity" style="max-height:300px;overflow-y:auto">
+        <div style="text-align:center;padding:20px;color:#8b949e;font-size:11px">Cargando...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Proyectos -->
+  <div class="section" id="s-projects">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="font-size:16px">Proyectos (D:\proyectos)</h2>
+      <button class="btn btn-primary" onclick="loadProjects()">🔄 Recargar</button>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(350px,1fr))">
+      <div class="card">
+        <h3>Total Proyectos</h3>
+        <div class="value" id="proj-total">0</div>
+        <div class="label">En D:\proyectos</div>
+      </div>
+      <div class="card">
+        <h3>Por Etapa</h3>
+        <div id="proj-stages" style="font-size:11px;margin-top:8px"></div>
+      </div>
+      <div class="card">
+        <h3>Archivos Totales</h3>
+        <div class="value" id="proj-files">0</div>
+        <div class="label">Contenido indexado</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Detalle de Proyectos</h3>
+      <div style="margin-bottom:12px">
+        <input type="text" placeholder="Buscar proyecto..." style="width:100%;padding:8px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#c9d1d9;font-size:11px" oninput="filterProjects(this.value)">
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Nombre</th><th>Etapa</th><th>Progreso</th><th>Archivos</th><th>JS</th><th>HTML</th><th>CSS</th><th>Fecha</th></tr></thead>
+          <tbody id="projects-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TODOs -->
+  <div class="section" id="s-todos">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="font-size:16px">Lista TODO Sincronizada</h2>
+      <button class="btn btn-primary" onclick="loadTodos()">🔄 Recargar</button>
+    </div>
+    <div class="card">
+      <div style="margin-bottom:12px">
+        <input type="text" placeholder="Nueva tarea..." id="todo-input" style="width:100%;padding:8px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#c9d1d9;font-size:11px">
+        <button class="btn btn-primary" style="margin-top:8px;width:100%" onclick="addTodo()">➕ Agregar</button>
+      </div>
+      <div id="todos-list" style="max-height:500px;overflow-y:auto"></div>
+    </div>
+  </div>
+
+  <!-- Módulos Premium -->
+  <div class="section" id="s-modules">
+    <h2 style="font-size:16px;margin-bottom:16px">7 Módulos Premium de Dashboard</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+      <div class="card" style="border-color:#58a6ff">
+        <h3 style="color:#58a6ff">📊 Ejecutivo</h3>
+        <div style="font-size:11px;color:#8b949e;margin:8px 0">KPIs, métricas clave, gráficos de tendencias, resumen financiero, estado de proyectos</div>
+        <span class="badge badge-blue">Activo</span>
+      </div>
+      <div class="card" style="border-color:#3fb950">
+        <h3 style="color:#3fb950">👥 CRM</h3>
+        <div style="font-size:11px;color:#8b949e;margin:8px 0">Gestión de leads, pipeline de ventas, historial de clientes, seguimiento de interacciones</div>
+        <span class="badge badge-green">Activo</span>
+      </div>
+      <div class="card" style="border-color:#d29922">
+        <h3 style="color:#d29922">📢 Campañas</h3>
+        <div style="font-size:11px;color:#8b949e;margin:8px 0">Rendimiento de anuncios, ROI, conversiones, análisis de audiencia, métricas de marketing</div>
+        <span class="badge badge-yellow">Activo</span>
+      </div>
+      <div class="card" style="border-color:#f85149">
+        <h3 style="color:#f85149">💰 Ventas</h3>
+        <div style="font-size:11px;color:#8b949e;margin:8px 0">Reportes de ventas, comisiones, metas, análisis de productos, tendencias de ingresos</div>
+        <span class="badge badge-red">Activo</span>
+      </div>
+      <div class="card" style="border-color:#a371f7">
+        <h3 style="color:#a371f7">⚙️ Operaciones</h3>
+        <div style="font-size:11px;color:#8b949e;margin:8px 0">Inventario, logística, recursos humanos, flujos de trabajo, eficiencia operativa</div>
+        <span class="badge" style="background:#a371f722;color:#a371f7;border:1px solid #a371f744">Activo</span>
+      </div>
+      <div class="card" style="border-color:#39d353">
+        <h3 style="color:#39d353">💳 Finanzas</h3>
+        <div style="font-size:11px;color:#8b949e;margin:8px 0">Flujo de caja, gastos, facturación, presupuestos, reportes financieros, impuestos</div>
+        <span class="badge badge-green">Activo</span>
+      </div>
+      <div class="card" style="border-color:#ff7b72">
+        <h3 style="color:#ff7b72">🤖 IA/Automatizaciones</h3>
+        <div style="font-size:11px;color:#8b949e;margin:8px 0">Agentes activos, tareas automatizadas, monitoreo de bots, logs de IA, integraciones n8n</div>
+        <span class="badge badge-red">Activo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Templates -->
+  <div class="section" id="s-templates">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="font-size:16px">Dashboard Templates (GitHub)</h2>
+      <button class="btn btn-primary" onclick="loadTemplates()">🔄 Recargar</button>
+    </div>
+    <div id="templates-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:16px"></div>
+  </div>
+
+  <!-- Recursos -->
+  <div class="section" id="s-resources">
+    <h2 style="font-size:16px;margin-bottom:16px">Recursos y APIs</h2>
+    <div id="resources-content" style="display:grid;gap:16px"></div>
+  </div>
+
+  <!-- Agentes -->
+  <div class="section" id="s-agents">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="font-size:16px">Agentes Disponibles</h2>
+      <button class="btn btn-primary" onclick="loadAgents()">🔄 Recargar</button>
+    </div>
+    <div class="card">
+      <div style="margin-bottom:12px">
+        <input type="text" placeholder="Buscar agente..." style="width:100%;padding:8px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#c9d1d9;font-size:11px" oninput="filterAgents(this.value)">
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>ID</th><th>Nombre</th><th>División</th><th>Herramientas</th><th>Color</th></tr></thead>
+          <tbody id="agents-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Campañas -->
+  <div class="section" id="s-campaigns">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="font-size:16px">Campañas</h2>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <h3>Nueva Campaña</h3>
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" id="campaign-name" placeholder="Ej: Lanzamiento Producto X">
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea id="campaign-desc" placeholder="Describe la campaña..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Agente Principal</label>
+          <select id="campaign-agent"></select>
+        </div>
+        <button class="btn btn-primary" onclick="createCampaign()" style="width:100%">Crear Campaña</button>
+      </div>
+      <div class="card">
+        <h3>Campañas Existentes</h3>
+        <div id="campaigns-list" style="max-height:400px;overflow-y:auto">
+          <div style="text-align:center;padding:20px;color:#8b949e;font-size:11px">No hay campañas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OpenCode AI -->
+  <div class="section" id="s-openai">
+    <h2 style="font-size:16px;margin-bottom:16px">OpenCode AI Integration</h2>
+    <div class="two-col">
+      <div class="card">
+        <h3>Enviar Prompt</h3>
+        <div class="form-group">
+          <label>Prompt para OpenCode</label>
+          <textarea id="prompt-input" placeholder="Escribe tu prompt aquí..." style="min-height:120px">Crea una estrategia de marketing para una agencia de diseño web que quiere atraer clientes locales</textarea>
+        </div>
+        <div class="form-group">
+          <label>Modelo</label>
+          <select id="prompt-model">
+            <option value="opencode/big-pickle">opencode/big-pickle</option>
+            <option value="qwen2.5:1.5b">qwen2.5:1.5b (Ollama)</option>
+            <option value="llama3.2:1b">llama3.2:1b (Ollama)</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="sendPrompt()" style="width:100%" id="prompt-btn">Enviar a OpenCode</button>
+      </div>
+      <div class="card">
+        <h3>Respuesta</h3>
+        <div id="prompt-response" style="background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:12px;min-height:200px;font-size:11px;white-space:pre-wrap;overflow-y:auto;max-height:400px;color:#8b949e">
+          La respuesta aparecerá aquí...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Telegram -->
+  <div class="section" id="s-telegram">
+    <h2 style="font-size:16px;margin-bottom:16px">Telegram Bot Configuration</h2>
+    <div class="two-col">
+      <div class="card">
+        <h3>Configuración del Bot</h3>
+        <div class="form-group">
+          <label>Bot Token</label>
+          <input type="text" id="tg-token" value="8754625349:AAFi4gNbjvm-vPfvkJX2wkwHAEkfglmbEL4" placeholder="123456:ABC-DEF...">
+        </div>
+        <div class="form-group">
+          <label>Chat ID (tu ID)</label>
+          <input type="text" id="tg-chat" value="1811224365" placeholder="Tu Chat ID">
+        </div>
+        <div class="form-group">
+          <label>Webhook URL (pública para Telegram)</label>
+          <input type="text" id="tg-webhook" placeholder="https://tu-dominio.com/telegram/webhook">
+          <div style="font-size:10px;color:#8b949e;margin-top:4px">Necesitas una URL pública (ngrok, localtunnel, etc.) para que Telegram envíe mensajes</div>
+        </div>
+        <button class="btn btn-primary" onclick="setWebhook()" style="width:100%">Configurar Webhook</button>
+      </div>
+      <div class="card">
+        <h3>Instrucciones</h3>
+        <div style="font-size:11px;line-height:1.6;color:#8b949e">
+          <p><strong>1. Obtener Bot Token:</strong><br>Habla con @BotFather en Telegram y crea un bot.</p>
+          <p style="margin-top:8px"><strong>2. Obtener Chat ID:</strong><br>Manda un mensaje a tu bot y visita:<br><code style="background:#0d1117;padding:2px 4px;border-radius:3px">https://api.telegram.org/bot&lt;TOKEN&gt;/getUpdates</code></p>
+          <p style="margin-top:8px"><strong>3. URL Pública:</strong><br>Usa ngrok: <code style="background:#0d1117;padding:2px 4px;border-radius:3px">ngrok http 3000</code></p>
+          <p style="margin-top:8px"><strong>4. Comandos Disponibles:</strong><br>
+          <span class="badge badge-blue">/agents</span> Lista agentes<br>
+          <span class="badge badge-blue">/prompt [texto]</span> Envía a OpenCode<br>
+          <span class="badge badge-blue">/campaigns</span> Ver campañas
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logs -->
+  <div class="section" id="s-logs">
+    <h2 style="font-size:16px;margin-bottom:16px">System Logs</h2>
+    <div class="card">
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="btn" onclick="loadLogs()">🔄 Actualizar</button>
+        <select id="log-filter" class="btn" onchange="loadLogs()" style="background:#0d1117;border:1px solid #30363d;color:#c9d1d9;padding:6px 12px;border-radius:6px;font-size:11px">
+          <option value="">Todos</option>
+          <option value="hub">Hub</option>
+          <option value="opened-code">OpenCode</option>
+          <option value="telegram">Telegram</option>
+        </select>
+      </div>
+      <div id="logs-list" style="max-height:500px;overflow-y:auto"></div>
+    </div>
+  </div>
+
+  <!-- Config -->
+  <div class="section" id="s-config">
+    <h2 style="font-size:16px;margin-bottom:16px">Configuración del Sistema</h2>
+    <div class="two-col">
+      <div class="card">
+        <h3>Variables de Entorno</h3>
+        <div id="config-vars" style="font-size:11px;font-family:monospace;line-height:1.8"></div>
+      </div>
+      <div class="card">
+        <h3>Conexiones</h3>
+        <div style="font-size:11px;line-height:2">
+          <div><strong>OpenCode:</strong> <span id="cfg-opencode">⚫ No verificado</span></div>
+          <div><strong>Hub Local:</strong> <span id="cfg-hub">⚫ No verificado</span></div>
+          <div><strong>Base de Datos:</strong> <span id="cfg-db">⚫ No verificado</span></div>
+          <div><strong>Telegram:</strong> <span id="cfg-telegram">⚫ No configurado</span></div>
+        </div>
+        <button class="btn btn-primary" onclick="testAllConnections()" style="width:100%;margin-top:12px">Probar Todas las Conexiones</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:3000';
+let agents = [];
+
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.section === name));
+  document.getElementById('s-' + name).classList.add('active');
+  if (name === 'agents') loadAgents();
+  if (name === 'campaigns') loadCampaigns();
+  if (name === 'projects') loadProjects();
+  if (name === 'todos') loadTodos();
+  if (name === 'templates') loadTemplates();
+  if (name === 'resources') loadResources();
+  if (name === 'logs') loadLogs();
+  if (name === 'config') loadConfig();
+}
+
+async function api(path, opts = {}) {
+  const res = await fetch(API + path, opts);
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
+}
+
+  async function testConnection() {
+    const status = document.getElementById('status');
+    try {
+      const data = await api('/health');
+      status.textContent = '● Conectado';
+      status.style.color = '#3fb950';
+      document.getElementById('dash-agents').textContent = data.agents;
+      document.getElementById('header-agents').textContent = data.agents;
+      document.getElementById('dash-opencode').textContent = '🟢';
+      document.getElementById('dash-opencode').style.color = '#3fb950';
+    } catch (e) {
+      status.textContent = '● Error: ' + e.message;
+      status.style.color = '#f85149';
+    }
+  }
+
+async function loadAgents() {
+  try {
+    agents = await api('/agents');
+    renderAgents();
+    populateAgentSelect();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function renderAgents(filter = '') {
+  const tbody = document.getElementById('agents-tbody');
+  const filtered = filter ? agents.filter(a => a.name.toLowerCase().includes(filter.toLowerCase()) || a.division.toLowerCase().includes(filter.toLowerCase())) : agents;
+  tbody.innerHTML = filtered.map(a => `<tr>
+    <td style="font-family:monospace;font-size:10px">${a.id}</td>
+    <td><strong>${a.name}</strong>${a.emoji ? ' ' + a.emoji : ''}</td>
+    <td><span class="badge badge-blue">${a.division}</span></td>
+    <td style="font-size:10px;color:#8b949e">${a.tools || '-'}</td>
+    <td><span style="display:inline-block;width:12px;height:12px;background:${a.color || '#30363d'};border-radius:2px;vertical-align:middle"></span></td>
+  </tr>`).join('');
+}
+
+function filterAgents(val) { renderAgents(val); }
+
+function populateAgentSelect() {
+  const sel = document.getElementById('campaign-agent');
+  sel.innerHTML = agents.map(a => `<option value="${a.id}">${a.name} (${a.division})</option>`).join('');
+}
+
+async function loadCampaigns() {
+  try {
+    const campaigns = await api('/campaigns');
+    document.getElementById('dash-campaigns').textContent = campaigns.length;
+    const list = document.getElementById('campaigns-list');
+    if (campaigns.length === 0) {
+      list.innerHTML = '<div style="text-align:center;padding:20px;color:#8b949e;font-size:11px">No hay campañas</div>';
+      return;
+    }
+    list.innerHTML = campaigns.map(c => `<div style="padding:8px;border-bottom:1px solid #21262d">
+      <div style="font-weight:600;font-size:12px">${c.name}</div>
+      <div style="font-size:10px;color:#8b949e;margin-top:2px">${c.description || 'Sin descripción'}</div>
+      <div style="margin-top:4px"><span class="badge ${c.status === 'active' ? 'badge-green' : 'badge-yellow'}">${c.status}</span></div>
+    </div>`).join('');
+  } catch (e) { console.error(e); }
+}
+
+async function createCampaign() {
+  const name = document.getElementById('campaign-name').value;
+  const desc = document.getElementById('campaign-desc').value;
+  if (!name) return alert('Ingresa un nombre');
+  try {
+    await api('/campaigns', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, description: desc }) });
+    document.getElementById('campaign-name').value = '';
+    document.getElementById('campaign-desc').value = '';
+    loadCampaigns();
+    alert('Campaña creada!');
+  } catch (e) { alert('Error: ' + e.message); }
+}
+
+async function sendPrompt() {
+  const input = document.getElementById('prompt-input').value;
+  const model = document.getElementById('prompt-model').value;
+  const btn = document.getElementById('prompt-btn');
+  const resp = document.getElementById('prompt-response');
+  if (!input) return;
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+  resp.textContent = 'Cargando...';
+  try {
+    const data = await api('/opened-code/prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, messages: [{ role: 'user', content: input }] })
+    });
+    resp.textContent = JSON.stringify(data, null, 2);
+  } catch (e) {
+    resp.textContent = 'Error: ' + e.message;
+    resp.style.color = '#f85149';
+  }
+  btn.textContent = 'Enviar a OpenCode';
+  btn.disabled = false;
+}
+
+async function loadLogs() {
+  const filter = document.getElementById('log-filter').value;
+  try {
+    const logs = await api('/logs');
+    const filtered = filter ? logs.filter(l => l.source === filter) : logs;
+    const list = document.getElementById('logs-list');
+    list.innerHTML = filtered.map(l => `<div class="log-entry">
+      <span class="log-time">${new Date(l.created_at).toLocaleTimeString()}</span>
+      <span class="log-source badge badge-${l.source === 'hub' ? 'blue' : l.source === 'opened-code' ? 'green' : 'yellow'}">${l.source}</span>
+      <span class="badge badge-${l.level === 'error' ? 'red' : l.level === 'info' ? 'blue' : 'yellow'}">${l.level}</span>
+      <span class="log-message">${l.message}</span>
+    </div>`).join('');
+  } catch (e) { console.error(e); }
+}
+
+async function setWebhook() {
+  const token = document.getElementById('tg-token').value;
+  const url = document.getElementById('tg-webhook').value;
+  if (!token || !url) return alert('Completa token y URL');
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/setWebhook?url=${encodeURIComponent(url)}`);
+    const data = await res.json();
+    alert(data.ok ? 'Webhook configurado!' : 'Error: ' + data.description);
+  } catch (e) { alert('Error: ' + e.message); }
+}
+
+async function loadConfig() {
+  const envPath = 'D:\\AI_Agency\\agency-hub\\backend\\.env';
+  const vars = document.getElementById('config-vars');
+  vars.innerHTML = `
+    <div>PORT=3000</div>
+    <div>OPENCODE_URL=http://127.0.0.1:8000</div>
+    <div>AGENTS_REPO=D:\\AI_Agency\\agency-agents</div>
+    <div>DB_PATH=D:\\AI_Agency\\agency-hub\\db.sqlite3</div>
+  `;
+}
+
+async function testAllConnections() {
+  const tests = [
+    { id: 'cfg-hub', url: '/health' },
+    { id: 'cfg-opencode', url: 'http://127.0.0.1:8000' },
+    { id: 'cfg-db', check: () => document.getElementById('dash-agents').textContent !== '0' }
+  ];
+  for (const t of tests) {
+    const el = document.getElementById(t.id);
+    try {
+      if (t.check) {
+        el.textContent = t.check() ? '🟢 OK' : '🔴 Fallo';
+      } else {
+        await fetch(t.url.startsWith('http') ? t.url : API + t.url);
+        el.textContent = '🟢 OK';
+        el.style.color = '#3fb950';
+      }
+    } catch (e) {
+      el.textContent = '🔴 Error';
+      el.style.color = '#f85149';
+    }
+  }
+}
+
+  // Init
+  testConnection();
+  loadAgents();
+  loadCampaigns();
+  loadProjects();
+  loadTodos();
+  loadTemplates();
+
+  let projects = [];
+
+  async function loadProjects() {
+    try {
+      const data = await api('/projects');
+      projects = data.value || [];
+      document.getElementById('proj-total').textContent = projects.length;
+      const totalFiles = projects.reduce((sum, p) => sum + (p.files_count || 0), 0);
+      document.getElementById('proj-files').textContent = totalFiles.toLocaleString();
+      
+      // Count by stage
+      const stages = {};
+      projects.forEach(p => {
+        const stage = p.stage || 'unknown';
+        stages[stage] = (stages[stage] || 0) + 1;
+      });
+      const stagesHtml = Object.entries(stages).map(([stage, count]) => 
+        `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #21262d">
+          <span style="color:#8b949e">${stage}</span><span class="badge badge-blue">${count}</span>
+        </div>`
+      ).join('');
+      document.getElementById('proj-stages').innerHTML = stagesHtml;
+      
+      renderProjects();
+    } catch (e) {
+      console.error('Error loading projects:', e);
+    }
+  }
+
+  function renderProjects(filter = '') {
+    const tbody = document.getElementById('projects-tbody');
+    const filtered = filter ? projects.filter(p => p.name.toLowerCase().includes(filter.toLowerCase())) : projects;
+    tbody.innerHTML = filtered.map(p => {
+      const progress = p.progress || 0;
+      const stageColors = {
+        'landing': '#58a6ff',
+        'crm': '#3fb950',
+        'backend': '#d29922',
+        'development': '#a371f7',
+        'planning': '#f85149'
+      };
+      const color = stageColors[p.stage] || '#8b949e';
+      return `<tr>
+        <td><strong>${p.name}</strong></td>
+        <td><span class="badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${p.stage || 'N/A'}</span></td>
+        <td style="min-width:150px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="flex:1;height:6px;background:#21262d;border-radius:3px;overflow:hidden">
+              <div style="height:100%;background:${color};width:${progress}%"></div>
+            </div>
+            <span style="font-size:10px;color:#8b949e">${progress}%</span>
+          </div>
+        </td>
+        <td style="font-size:10px;color:#8b949e">${p.files_count || 0}</td>
+        <td style="font-size:10px;color:#8b949e">${p.js_files || 0}</td>
+        <td style="font-size:10px;color:#8b949e">${p.html_files || 0}</td>
+        <td style="font-size:10px;color:#8b949e">${p.css_files || 0}</td>
+        <td style="font-size:10px;color:#8b949e">${p.created_at ? new Date(p.created_at).toLocaleDateString() : 'N/A'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function filterProjects(val) { renderProjects(val); }
+
+  async function loadTodos() {
+    try {
+      const todos = await api('/todos');
+      const list = document.getElementById('todos-list');
+      if (!todos || todos.length === 0) {
+        list.innerHTML = '<div style="text-align:center;padding:20px;color:#8b949e;font-size:11px">No hay tareas pendientes</div>';
+        return;
+      }
+      list.innerHTML = todos.map(t => `<div style="display:flex;align-items:center;gap:8px;padding:8px;border-bottom:1px solid #21262d">
+        <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo(${t.id}, this.checked)" style="cursor:pointer">
+        <span style="flex:1;font-size:11px;${t.completed ? 'color:#8b949e;text-decoration:line-through' : 'color:#c9d1d9'}">${t.task}</span>
+        <button class="btn" style="padding:2px 8px;font-size:10px" onclick="deleteTodo(${t.id})">🗑️</button>
+      </div>`).join('');
+      document.getElementById('dash-tasks').textContent = todos.filter(t => !t.completed).length;
+    } catch (e) {
+      console.error('Error loading todos:', e);
+    }
+  }
+
+  async function addTodo() {
+    const input = document.getElementById('todo-input');
+    const task = input.value.trim();
+    if (!task) return;
+    try {
+      await api('/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task })
+      });
+      input.value = '';
+      loadTodos();
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  }
+
+  async function toggleTodo(id, completed) {
+    try {
+      await api(`/todos/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completed })
+      });
+      loadTodos();
+    } catch (e) {
+      console.error('Error toggling todo:', e);
+    }
+  }
+
+  async function deleteTodo(id) {
+    if (!confirm('¿Eliminar esta tarea?')) return;
+    try {
+      await api(`/todos/${id}`, { method: 'DELETE' });
+      loadTodos();
+    } catch (e) {
+      console.error('Error deleting todo:', e);
+    }
+  }
+
+  async function loadTemplates() {
+    try {
+      const templates = await (await fetch('/dashboard-templates.json')).json();
+      const list = document.getElementById('templates-list');
+      list.innerHTML = templates.map(t => `<div class="card" style="margin:0">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+          <div>
+            <strong style="color:#c9d1d9;font-size:12px">${t.name}</strong>
+            <span class="badge badge-yellow" style="margin-left:8px">⭐ ${t.stars}</span>
+          </div>
+          ${t.dark_mode ? '<span class="badge badge-blue" style="font-size:9px">Dark Mode</span>' : ''}
+        </div>
+        <div style="font-size:10px;color:#8b949e;margin-bottom:8px">${t.description}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+          <span class="badge badge-green" style="font-size:9px">${t.tech}</span>
+          <span class="badge" style="background:#d2992222;color:#d29922;border:1px solid #d2992244;font-size:9px">${t.stage}</span>
+        </div>
+        <a href="${t.url}" target="_blank" style="font-size:10px;color:#58a6ff;text-decoration:none">🔗 Ver en GitHub</a>
+      </div>`).join('');
+    } catch (e) {
+      document.getElementById('templates-list').innerHTML = '<div style="color:#f85149;padding:20px">Error cargando templates: ' + e.message + '</div>';
+    }
+  }
+
+  async function loadResources() {
+  const container = document.getElementById('resources-content');
+  if (!container) return;
+  try {
+    const data = await (await fetch('/resources.json')).json();
+    let html = '';
+    for (const [key, section] of Object.entries(data)) {
+      html += `<div class="card" style="margin-bottom:16px">
+        <h3>${section.icon || '📦'} ${section.title}</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px;margin-top:12px">`;
+      section.items.forEach(item => {
+        html += `<div style="background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:10px;font-size:11px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <strong style="color:#c9d1d9">${item.name}</strong>
+            ${item.key ? `<button class="btn" style="padding:2px 8px;font-size:10px" onclick="copyToClipboard('${item.key}')">📋 Copiar</button>` : ''}
+          </div>
+          <div style="color:#8b949e;font-size:10px;margin-bottom:6px">${item.desc || ''}</div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap">`;
+        if (item.url) {
+          html += `<a href="${item.url}" target="_blank" style="font-size:10px;color:#58a6ff;text-decoration:none;background:#1f6feb22;padding:2px 6px;border-radius:3px;border:1px solid #1f6feb44">🔗 URL</a>`;
+        }
+        if (item.key) {
+          html += `<span style="font-size:9px;color:#8b949e;background:#21262d;padding:2px 6px;border-radius:3px;font-family:monospace;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${item.key}">${item.key.substring(0, 20)}...</span>`;
+        }
+        if (item.project_id) {
+          html += `<span style="font-size:9px;color:#8b949e">Project: ${item.project_id}</span>`;
+        }
+        html += `</div></div>`;
+      });
+      html += `</div></div>`;
+    }
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = '<div style="color:#f85149;padding:20px">Error cargando recursos: ' + e.message + '</div>';
+  }
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Copiado al portapapeles!');
+  });
+}
+
+// Load resources on section show
+const originalShowSection = showSection;
+showSection = function(name) {
+  originalShowSection(name);
+  if (name === 'resources') loadResources();
+};
+</script>
+</body>
+</html>

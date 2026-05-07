@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  hub:
+    build: ./backend
+    container_name: agency-hub
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/usr/src/app
+  opencode-bridge:
+    image: node:18
+    container_name: opencode-bridge
+    working_dir: /app
+    command: node server.js
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./opencode-bridge:/app
+  ollama:
+    image: ghcr.io/johan-sung/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+volumes:
+  agency_data:
+    driver: local

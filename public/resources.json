@@ -1,0 +1,204 @@
+{
+  "apis": {
+    "title": "APIs y Credenciales",
+    "icon": "🔑",
+    "items": [
+      {"name": "Pexels API", "url": "https://www.pexels.com/api/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Videos 4K y fotos stock"},
+      {"name": "Unsplash API", "url": "https://unsplash.com/developers", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Fotografía premium alta fidelidad"},
+      {"name": "ElevenLabs", "url": "https://elevenlabs.io/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Clonación de voz y TTS"},
+      {"name": "Shotstack", "url": "https://shotstack.io/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Renderizado automático de videos"},
+      {"name": "Stability AI", "url": "https://platform.stability.ai/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Generación de imágenes IA"},
+      {"name": "Groq", "url": "https://console.groq.com/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "LLM ultrarrápido"},
+      {"name": "Fal AI", "url": "https://fal.ai/dashboard/keys", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Generación de imágenes"},
+      {"name": "OpenRouter", "url": "https://openrouter.ai/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Router de modelos gratuitos"},
+      {"name": "X.AI (Grok)", "url": "https://console.x.ai/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Modelo Grok de X"},
+      {"name": "Google AI Studio", "url": "https://aistudio.google.com/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Gemini API"},
+      {"name": "GitHub Token", "url": "https://github.com/settings/tokens", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Acceso a repos"},
+      {"name": "Vercel Token", "url": "https://vercel.com/account/tokens", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Deploy de proyectos"},
+      {"name": "Supabase", "url": "https://supabase.com/", "key": "REPLACE_WITH_YOUR_KEY", "ref": "REPLACE_WITH_YOUR_REF", "desc": "Base de datos y auth"},
+      {"name": "Firebase", "url": "https://firebase.google.com/", "key": "REPLACE_WITH_YOUR_KEY", "project": "REPLACE_WITH_YOUR_PROJECT", "desc": "Backend móvil y web"},
+      {"name": "MercadoPago", "url": "https://www.mercadopago.cl/developers/", "key": "REPLACE_WITH_YOUR_KEY", "secret": "REPLACE_WITH_YOUR_SECRET", "desc": "Pagos online"},
+      {"name": "Telegram Bot", "url": "https://core.telegram.org/bots/api", "key": "REPLACE_WITH_YOUR_KEY", "chat_id": "REPLACE_WITH_YOUR_CHAT_ID", "desc": "Bot de Telegram"},
+      {"name": "Google Stitch", "url": "https://stitch.googleapis.com/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Conector de datos tiempo real"}
+    ]
+  },
+  "frameworks": {
+    "title": "Frameworks y Herramientas de Desarrollo",
+    "icon": "⚡",
+    "items": [
+      {"name": "Next.js", "url": "https://nextjs.org/", "desc": "Framework React full-stack"},
+      {"name": "React Three Fiber", "url": "https://docs.pmnd.rs/react-three-fiber", "desc": "3D en React"},
+      {"name": "React Three Next", "url": "https://github.com/pmndrs/react-three-next", "desc": "Base para landing 3D premium"},
+      {"name": "Three.js", "url": "https://threejs.org/", "desc": "Gráficos 3D web"},
+      {"name": "Framer Motion", "url": "https://www.framer.com/motion/", "desc": "Animaciones React"},
+      {"name": "Tailwind CSS", "url": "https://tailwindcss.com/", "desc": "CSS utilitario"},
+      {"name": "Vite", "url": "https://vitejs.dev/", "desc": "Build tool ultrarrápido"},
+      {"name": "TypeScript", "url": "https://www.typescriptlang.org/", "desc": "JS tipado"},
+      {"name": "Node.js", "url": "https://nodejs.org/es", "desc": "Backend JavaScript"},
+      {"name": "Docker", "url": "https://www.docker.com/", "desc": "Contenedores"},
+      {"name": "n8n", "url": "https://n8n.io/", "desc": "Automatización de flujos"},
+      {"name": "LangChain", "url": "https://js.langchain.com/", "desc": "Framework para agentes IA"},
+      {"name": "CrewAI", "url": "https://www.crewai.com/", "desc": "Orquestación multi-agente"}
+    ]
+  },
+  "ui_libraries": {
+    "title": "UI Libraries y Componentes",
+    "icon": "🎨",
+    "items": [
+      {"name": "shadcn/ui", "url": "https://ui.shadcn.com/", "desc": "Componentes limpios y accesibles"},
+      {"name": "Magic UI", "url": "https://magicui.design/", "desc": "Animaciones de texto y efectos"},
+      {"name": "Aceternity UI", "url": "https://ui.aceternity.com/", "desc": "Fondos de partículas cinematográficos"},
+      {"name": "Uiverse", "url": "https://uiverse.io/", "desc": "Miles de componentes CSS"},
+      {"name": "Hover.dev", "url": "https://hover.dev/", "desc": "Animaciones hover"},
+      {"name": "Origin UI", "url": "https://originui.com/", "desc": "Componentes modernos y fluidos"},
+      {"name": "Flowbite", "url": "https://flowbite.com/", "desc": "Ecosistema Tailwind"},
+      {"name": "Radix UI", "url": "https://www.radix-ui.com/", "desc": "Primitivas accesibles"},
+      {"name": "Tailwind UI", "url": "https://tailwindui.com/", "desc": "Componentes oficiales Tailwind"},
+      {"name": "Drei", "url": "https://github.com/pmndrs/drei", "desc": "Helpers para React Three Fiber"}
+    ]
+  },
+  "visual": {
+    "title": "Recursos Visuales y Animaciones",
+    "icon": "✨",
+    "items": [
+      {"name": "LottieFiles", "url": "https://lottiefiles.com/", "desc": "Animaciones JSON livianas"},
+      {"name": "Spline", "url": "https://spline.design/", "desc": "Objetos 3D interactivos"},
+      {"name": "Vanta.js", "url": "https://www.vantajs.com/", "desc": "Fondos animados 3D fáciles"},
+      {"name": "Superhero", "url": "https://superhero.io/", "desc": "Animaciones de entrada"},
+      {"name": "CodePen", "url": "https://codepen.io/", "desc": "Ejemplos de código animado"},
+      {"name": "Awwwards", "url": "https://www.awwwards.com/", "desc": "Webs ultra modernas"},
+      {"name": "Dribbble", "url": "https://dribbble.com/", "desc": "Diseños UI/UX"},
+      {"name": "Lapa Ninja", "url": "https://lapa.ninja/", "desc": "Galería landings del mundo"},
+      {"name": "Land-book", "url": "https://land-book.com/", "desc": "Estructuras de webs"},
+      {"name": "One Page Love", "url": "https://onepagelove.com/", "desc": "Sitios de una página"},
+      {"name": "SiteInspire", "url": "https://www.siteinspire.com/", "desc": "Filtros por estilo"},
+      {"name": "Landingfolio", "url": "https://www.landingfolio.com/", "desc": "Componentes landings"}
+    ]
+  },
+  "icons_images": {
+    "title": "Iconos e Imágenes",
+    "icon": "🖼️",
+    "items": [
+      {"name": "Unsplash", "url": "https://unsplash.com/", "desc": "Fotos gratuitas alta calidad"},
+      {"name": "Pexels", "url": "https://www.pexels.com/", "desc": "Videos y fotos gratuitas"},
+      {"name": "Pixabay", "url": "https://pixabay.com/", "desc": "Vectores e ilustraciones"},
+      {"name": "Icon Icon", "url": "https://www.iconicon.io/", "desc": "Iconos 3D alta gama"},
+      {"name": "Lucide Icons", "url": "https://lucide.dev/", "desc": "Iconos planos modernos"},
+      {"name": "Phosphor Icons", "url": "https://phosphoricons.com/", "desc": "Iconos sofisticados"},
+      {"name": "Fontshare", "url": "https://www.fontshare.com/", "desc": "Fuentes premium gratis"},
+      {"name": "Khroma", "url": "https://khroma.co/", "desc": "IA para paletas de colores"},
+      {"name": "Remove.bg", "url": "https://www.remove.bg/", "desc": "Quitar fondos automático"},
+      {"name": "Shapefest", "url": "https://shapefest.com/", "desc": "Objetos 3D gratuitos"},
+      {"name": "Openverse", "url": "https://openverse.org/", "desc": "Motor búsqueda Creative Commons"},
+      {"name": "Freepik", "url": "https://www.freepik.com/", "desc": "Recursos gráficos"}
+    ]
+  },
+  "ai_models": {
+    "title": "Modelos de IA y APIs",
+    "icon": "🤖",
+    "items": [
+      {"name": "OpenRouter - Free Models", "url": "https://openrouter.ai/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Router modelos gratuitos"},
+      {"name": "Minimax M2.5", "url": "https://openrouter.ai/models", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Modelo multimodal"},
+      {"name": "Gemini 4", "url": "https://ai.google.dev/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Modelo de Google"},
+      {"name": "Gemma 4", "url": "https://ai.google.dev/gemma", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Modelo abierto de Google"},
+      {"name": "NVIDIA Nemotron", "url": "https://build.nvidia.com/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Modelo de NVIDIA"},
+      {"name": "Qwen", "url": "https://qwen.readthedocs.io/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Modelo de Alibaba"},
+      {"name": "Grok", "url": "https://x.ai/", "key": "REPLACE_WITH_YOUR_KEY", "desc": "Modelo de X (Twitter)"},
+      {"name": "Replicate", "url": "https://replicate.com/", "desc": "Generación de imágenes con IA"},
+      {"name": "NanoBanana", "url": "https://t.me/nanobanana_gidbot", "desc": "Bot Telegram generador imágenes"}
+    ]
+  },
+  "inspiration": {
+    "title": "Inspiración y Templates",
+    "icon": "💡",
+    "items": [
+      {"name": "Awwwards", "url": "https://www.awwwards.com/", "desc": "Lo mejor del diseño web"},
+      {"name": "Godly", "url": "https://godly.website/", "desc": "Webs con animaciones imposibles"},
+      {"name": "SaaS Landing Page", "url": "https://saaslandingpage.com/", "desc": "Landing pages estilo Silicon Valley"},
+      {"name": "Cruip", "url": "https://cruip.com/", "desc": "Plantillas técnicas alta calidad"},
+      {"name": "Curated Design", "url": "https://curated.design/", "desc": "Selección curada web estética"},
+      {"name": "Bento Grids", "url": "https://bentogrids.com/", "desc": "Inspiración layouts asimétricos"},
+      {"name": "CTA Gallery", "url": "https://cta.gallery/", "desc": "Botones de llamada a la acción"},
+      {"name": "Nav Gallery", "url": "https://navbar.gallery/", "desc": "Menús de navegación"},
+      {"name": "Footer Design", "url": "https://footer.design/", "desc": "Pies de página"},
+      {"name": "Dark Mode Design", "url": "https://darkmodedesign.com/", "desc": "Ejemplos modo oscuro"},
+      {"name": "Pricing Pages", "url": "https://pricingpages.xyz/", "desc": "Páginas de precios"},
+      {"name": "Checklist Design", "url": "https://checklist.design/", "desc": "Formularios de captura"},
+      {"name": "404 Design", "url": "https://404.design/", "desc": "Páginas de error creativas"}
+    ]
+  },
+  "github_repos": {
+    "title": "Repositorios GitHub Destacados",
+    "icon": "🐙",
+    "items": [
+      {"name": "Awesome Agents", "url": "https://github.com/kyrolabs/awesome-agents", "desc": "Lista de frameworks de agentes IA"},
+      {"name": "Awesome AI Agents", "url": "https://github.com/korchasa/awesome-ai-agents", "desc": "Más recursos de agentes"},
+      {"name": "Awesome Telegram Bots", "url": "https://github.com/ebertek/awesome-telegram-bots", "desc": "Bots de Telegram"},
+      {"name": "React Three Fiber", "url": "https://github.com/pmndrs/react-three-fiber", "desc": "3D en React"},
+      {"name": "React Three Next", "url": "https://github.com/pmndrs/react-three-next", "desc": "Base Next.js + 3D"},
+      {"name": "Framer Motion", "url": "https://github.com/framer/motion", "desc": "Animaciones React"},
+      {"name": "n8n", "url": "https://github.com/n8n-io/n8n", "desc": "Automatización de flujos"},
+      {"name": "LangChain", "url": "https://github.com/langchain-ai/langchain", "desc": "Framework agentes IA"},
+      {"name": "CrewAI", "url": "https://github.com/CrewAIInc/crewAI", "desc": "Orquestación multi-agente"},
+      {"name": "Telegraf", "url": "https://github.com/telegraf/telegraf", "desc": "Bot Telegram Node.js"},
+      {"name": "ViralCutter", "url": "https://github.com/RafaelGodoyEbert/ViralCutter", "desc": "Ganchos virales"},
+      {"name": "Free LLM API", "url": "https://github.com/cheahjs/free-llm-api-resources", "desc": "APIs gratuitas LLM"},
+      {"name": "HeyGen Hyperframes", "url": "https://github.com/heygen-com/hyperframes", "desc": "Generación de video IA"},
+      {"name": "Awesome Avatar", "url": "https://github.com/Jason-cs18/awesome-avatar", "desc": "Recursos avatares"},
+      {"name": "Avatar Gen", "url": "https://github.com/topics/avatar-gen", "desc": "Generación avatares"},
+      {"name": "User Avatars", "url": "https://github.com/topics/user-avatars", "desc": "Avatares usuarios"},
+      {"name": "3D Gallery", "url": "https://github.com/topics/3d-gallery", "desc": "Galerías 3D"},
+      {"name": "Visual Effects C++", "url": "https://github.com/topics/visual-effects?l=c%2B%2B", "desc": "VFX C++"},
+      {"name": "Visual Effects C#", "url": "https://github.com/topics/visual-effects?l=c%23", "desc": "VFX C#"},
+      {"name": "3D Visualization", "url": "https://github.com/topics/3d-visualization", "desc": "Viz 3D"},
+      {"name": "Landing Pages HTML", "url": "https://github.com/topics/landingpage?l=html", "desc": "Landings HTML"},
+      {"name": "Suno AI", "url": "https://github.com/suno-ai", "desc": "Generación música IA"},
+      {"name": "ElevenLabs", "url": "https://github.com/elevenlabs", "desc": "Clonación voz"},
+      {"name": "ElevenLabs PHP", "url": "https://github.com/topics/elevenlabs?l=php", "desc": "Integración PHP"},
+      {"name": "n8n Skills", "url": "https://github.com/topics/n8n-skills", "desc": "Habilidades n8n"},
+      {"name": "Marketing Skills 1", "url": "https://github.com/coreyhaines31/marketingskills", "desc": "Marketing"},
+      {"name": "Marketing Skills 2", "url": "https://github.com/kostja94/marketing-skills", "desc": "Marketing"},
+      {"name": "Marketing Skills 3", "url": "https://github.com/mysticaltech/marketingskills", "desc": "Marketing"},
+      {"name": "Presentation Slides", "url": "https://github.com/topics/presentation-slides", "desc": "Diapositivas"},
+      {"name": "Reels Python", "url": "https://github.com/topics/reels?l=python", "desc": "Reels Python"},
+      {"name": "Instagram Reels HTML", "url": "https://github.com/topics/instagram-reels?l=html", "desc": "Reels HTML"},
+      {"name": "Reels Automation", "url": "https://github.com/topics/instagram-reels-automation", "desc": "Automatización"},
+      {"name": "Reels Downloader TS", "url": "https://github.com/topics/reels-downloader?l=typescript", "desc": "Descargar reels"},
+      {"name": "Car Website", "url": "https://github.com/topics/car-website", "desc": "Sitios autos"},
+      {"name": "Framer Motion 3D", "url": "https://github.com/topics/framer-motion-3d", "desc": "3D Framer"},
+      {"name": "Dashboard Templates", "url": "https://github.com/topics/dashboard-template?l=html", "desc": "Templates dashboards"},
+      {"name": "ViralCutter", "url": "https://github.com/RafaelGodoyEbert/ViralCutter", "desc": "Ganchos virales"},
+      {"name": "Awesome Uniswap Hooks", "url": "https://github.com/fewwww/awesome-uniswap-hooks", "desc": "Hooks Uniswap"},
+      {"name": "HeyGen Hyperframes", "url": "https://github.com/heygen-com/hyperframes", "desc": "Video IA"}
+    ]
+  },
+  "automation": {
+    "title": "Automatización y Flujos",
+    "icon": "⚙",
+    "items": [
+      {"name": "n8n Docs", "url": "https://docs.n8n.io/", "desc": "Documentación oficial n8n"},
+      {"name": "n8n Templates", "url": "https://n8n.io/workflows", "desc": "Más de 6,000 plantillas"},
+      {"name": "NotebookLM", "url": "https://notebooklm.google.com/", "desc": "Consultor IA para flujos"},
+      {"name": "Activepieces", "url": "https://www.activepieces.com/", "desc": "Alternativa open source"},
+      {"name": "Make", "url": "https://www.make.com/", "desc": "Automatización visual"},
+      {"name": "Zapier", "url": "https://zapier.com/", "desc": "Automatización clásica"}
+    ]
+  },
+  "tools": {
+    "title": "Herramientas Adicionales",
+    "icon": "🛠️",
+    "items": [
+      {"name": "Google Antigraphy", "url": "https://antigraphy.google/", "desc": "Búsqueda inmersiva"},
+      {"name": "MCPMarket", "url": "https://mcpmarket.com/es", "desc": "Mercado de servidores MCP"},
+      {"name": "HTMLRev", "url": "https://htmlrev.com/", "desc": "Plantillas web"},
+      {"name": "SaveClip", "url": "https://saveclip.app/es", "desc": "Descargar contenido Instagram"},
+      {"name": "RapidAPI", "url": "https://rapidapi.com/", "desc": "Hub de APIs"},
+      {"name": "Kaggle", "url": "https://www.kaggle.com/", "desc": "Datasets de imágenes"},
+      {"name": "Google Maps API", "url": "https://developers.google.com/maps", "desc": "Fotos calles y sectores"},
+      {"name": "Vercel", "url": "https://vercel.com/", "desc": "Hosting y despliegue"},
+      {"name": "Expo", "url": "https://expo.dev/", "desc": "Desarrollo móvil React"},
+      {"name": "Supabase", "url": "https://supabase.com/", "desc": "Backend completo"},
+      {"name": "Firebase", "url": "https://firebase.google.com/", "desc": "Plataforma Google"}
+    ]
+  }
+}
