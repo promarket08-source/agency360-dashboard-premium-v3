@@ -1,4 +1,9 @@
 // ========== VOICE ASSISTANT ==========
+// Register Chart.js plugins
+if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') {
+  Chart.register(ChartDataLabels);
+}
+
 let voiceActive = false;
 let recognition = null;
 
@@ -151,6 +156,32 @@ function showSection(name) {
   if (name === 'mercadopago') {
     setTimeout(() => initMercadoPagoCharts(), 100);
   }
+
+  // Initialize executive charts (revenue, funnel)
+  if (name === 'executive') {
+    setTimeout(() => {
+      initRevenueChart();
+      initFunnelChart();
+    }, 100);
+  }
+
+  // Initialize campaigns chart
+  if (name === 'campaigns') {
+    setTimeout(() => initCampaignsChart(), 100);
+  }
+
+  // Initialize finance chart
+  if (name === 'finance') {
+    setTimeout(() => initFinanceChart(), 100);
+  }
+
+  // Initialize projects section
+  if (name === 'projects') {
+    setTimeout(() => {
+      loadProjectData();
+      console.log('Projects section shown, loading updated data...');
+    }, 100);
+  }
   
   // Update page title
   const titles = {
@@ -172,6 +203,15 @@ function showSection(name) {
     'settings': 'Configuración'
   };
   document.title = 'Agencia 360 - ' + (titles[name] || 'Dashboard Premium');
+
+  // Save last section to preferences
+  try {
+    const preferences = JSON.parse(localStorage.getItem('dashboardPreferences') || '{}');
+    preferences.lastSection = name;
+    localStorage.setItem('dashboardPreferences', JSON.stringify(preferences));
+  } catch (e) {
+    console.error('Error saving last section:', e);
+  }
 }
 
 // ========== GLOBAL SEARCH ==========
@@ -200,349 +240,8 @@ function updateTodoCount() {
   document.getElementById('todoCount').textContent = (total - checked) + ' tareas pendientes';
 }
 
-// ========== CHARTS ==========
-// Revenue Chart
-const revCtx = document.getElementById('revenueChart')?.getContext('2d');
-if (revCtx) {
-  new Chart(revCtx, {
-    type: 'line',
-    data: {
-      labels: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
-      datasets: [{
-        label: 'Ingresos 2026',
-        data: [45000, 52000, 58000, 62000, 71000, 68500, 73000, 78000, 82000, 79000, 84250, 84250],
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59,130,246,0.1)',
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6
-      }, {
-        label: 'Meta',
-        data: [50000, 55000, 60000, 65000, 70000, 75000, 75000, 75000, 75000, 75000, 75000, 75000],
-        borderColor: '#f59e0b',
-        borderDash: [5, 5],
-        fill: false,
-        pointRadius: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { labels: { color: '#8b8b9a', font: { size: 11 } },
-        datalabels: { display: false }
-      },
-      scales: {
-        y: { 
-          ticks: { color: '#5a5a6a', font: { size: 10 }, callback: v => '$' + (v/1000) + 'K' },
-          grid: { color: 'rgba(42,42,58,0.5)' }
-        },
-        x: { ticks: { color: '#5a5a6a', font: { size: 10 } }, grid: { display: false } }
-      }
-    }
-  });
-}
-
-// Funnel Chart
-const funnelCtx = document.getElementById('funnelChart')?.getContext('2d');
-if (funnelCtx) {
-  new Chart(funnelCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Leads (32)', 'Discovery (18)', 'Proposal (12)', 'Negotiation (8)', 'Won (5)'],
-      datasets: [{
-        label: 'Cantidad',
-        data: [32, 18, 12, 8, 5],
-        backgroundColor: [
-          'rgba(59,130,246,0.8)',
-          'rgba(139,92,246,0.8)',
-          'rgba(245,158,11,0.8)',
-          'rgba(249,115,22,0.8)',
-          'rgba(16,185,129,0.8)'
-        ],
-        borderRadius: 6,
-        barPercentage: 0.6
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      indexAxis: 'y',
-      plugins: {
-        legend: { display: false },
-        datalabels: {
-          color: '#fff',
-          font: { weight: 'bold', size: 12 },
-          formatter: (value) => value
-        }
-      },
-      scales: {
-        x: { 
-          ticks: { color: '#5a5a6a', font: { size: 10 } },
-          grid: { color: 'rgba(42,42,58,0.5)' }
-        },
-        y: { ticks: { color: '#8b8b9a', font: { size: 11 } }, grid: { display: false } }
-      }
-    }
-  });
-}
-
-// Campaigns Chart
-const campCtx = document.getElementById('campaignsChart')?.getContext('2d');
-if (campCtx) {
-  new Chart(campCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Black Friday', 'Remate Calzados', 'Google Search', 'TikTok Launch'],
-      datasets: [{
-        label: 'ROAS',
-        data: [6.8, 5.2, 3.1, 4.5],
-        backgroundColor: 'rgba(59,130,246,0.8)',
-        borderRadius: 6
-      }, {
-        label: 'Spend ($)',
-        data: [8450, 6200, 4100, 3800],
-        backgroundColor: 'rgba(245,158,11,0.6)',
-        borderRadius: 6
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { labels: { color: '#8b8b9a', font: { size: 11 } },
-        datalabels: { display: false }
-      },
-      scales: {
-        y: { 
-          ticks: { color: '#5a5a6a', font: { size: 10 } },
-          grid: { color: 'rgba(42,42,58,0.5)' }
-        },
-        x: { ticks: { color: '#5a5a6a', font: { size: 10 } }, grid: { display: false } }
-      }
-    }
-  });
-}
-
-// Finance Chart
-const finCtx = document.getElementById('financeChart')?.getContext('2d');
-if (finCtx) {
-  new Chart(finCtx, {
-    type: 'line',
-    data: {
-      labels: ['Ene','Feb','Mar','Abr','May','Jun'],
-      datasets: [{
-        label: 'Ingresos',
-        data: [45000, 52000, 58000, 62000, 71000, 84250],
-        borderColor: '#10b981',
-        backgroundColor: 'rgba(16,185,129,0.1)',
-        fill: true,
-        tension: 0.4
-      }, {
-        label: 'Gastos',
-        data: [18000, 19500, 21000, 22000, 23500, 18200],
-        borderColor: '#ef4444',
-        backgroundColor: 'rgba(239,68,68,0.1)',
-        fill: true,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { labels: { color: '#8b8b9a', font: { size: 11 } },
-        datalabels: { display: false }
-      },
-      scales: {
-        y: { 
-          ticks: { color: '#5a5a6a', font: { size: 10 }, callback: v => '$' + (v/1000) + 'K' },
-          grid: { color: 'rgba(42,42,58,0.5)' }
-        },
-        x: { ticks: { color: '#5a5a6a', font: { size: 10 } }, grid: { display: false } }
-      }
-    }
-  });
-}
-
-// ========== SOCIAL GROWTH CHART ==========
-let socialChartInitialized = false;
-function initSocialChart() {
-  if (socialChartInitialized) return;
-  const socialCtx = document.getElementById('socialGrowthChart');
-  if (socialCtx) {
-    new Chart(socialCtx.getContext('2d'), {
-      type: 'line',
-      data: {
-        labels: ['Nov', 'Dic', 'Ene', 'Feb', 'Mar', 'Abr'],
-        datasets: [
-          {
-            label: 'Facebook',
-            data: [10200, 10800, 11200, 11500, 12000, 12450],
-            borderColor: '#1877F2',
-            backgroundColor: 'rgba(24,119,242,0.1)',
-            tension: 0.4
-          },
-          {
-            label: 'Instagram',
-            data: [12400, 13800, 15200, 16500, 17500, 18920],
-            borderColor: '#E4405F',
-            backgroundColor: 'rgba(228,64,95,0.1)',
-            tension: 0.4
-          },
-          {
-            label: 'TikTok',
-            data: [3200, 4500, 5800, 6500, 7200, 8750],
-            borderColor: '#000000',
-            backgroundColor: 'rgba(0,0,0,0.1)',
-            tension: 0.4
-          },
-          {
-            label: 'YouTube',
-            data: [2100, 2400, 2700, 2900, 3100, 3240],
-            borderColor: '#FF0000',
-            backgroundColor: 'rgba(255,0,0,0.1)',
-            tension: 0.4
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#ededf5', font: { size: 11 } },
-          datalabels: { display: false }
-        },
-        scales: {
-          y: { ticks: { color: '#8b8b9a', font: { size: 10 } }, grid: { color: 'rgba(42,42,58,0.5)' } },
-          x: { ticks: { color: '#8b8b9a', font: { size: 10 } }, grid: { display: false } }
-        }
-      }
-    });
-    socialChartInitialized = true;
-  }
-}
-
-// ========== OPPORTUNITIES CHART ==========
-let opportunitiesChartInitialized = false;
-function initOpportunitiesChart() {
-  if (opportunitiesChartInitialized) return;
-  const ctx = document.getElementById('opportunitiesChart');
-  if (ctx) {
-    new Chart(ctx.getContext('2d'), {
-      type: 'bar',
-      data: {
-        labels: ['Nov', 'Dic', 'Ene', 'Feb', 'Mar', 'Abr'],
-        datasets: [{
-          label: 'Oportunidades Detectadas',
-          data: [8, 12, 15, 18, 22, 28],
-          backgroundColor: 'rgba(245,158,11,0.8)',
-          borderRadius: 6
-        }, {
-          label: 'Convertidas',
-          data: [3, 5, 7, 9, 12, 15],
-          backgroundColor: 'rgba(16,185,129,0.8)',
-          borderRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#8b8b9a', font: { size: 11 } },
-          datalabels: { display: false }
-        },
-        scales: {
-          y: { ticks: { color: '#5a5a6a', font: { size: 10 } }, grid: { color: 'rgba(42,42,58,0.5)' } },
-          x: { ticks: { color: '#5a5a6a', font: { size: 10 } }, grid: { display: false } }
-        }
-      }
-    });
-    opportunitiesChartInitialized = true;
-  }
-}
-
-// ========== MERCADO PAGO CHARTS ==========
-let mercadoPagoChartInitialized = false;
-function initMercadoPagoCharts() {
-  if (mercadoPagoChartInitialized) return;  
-  
-  // Ingresos vs Egresos
-  const mpCtx = document.getElementById('mercadoPagoChart');
-  if (mpCtx) {
-    new Chart(mpCtx.getContext('2d'), {
-      type: 'line',
-      data: {
-        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May'],
-        datasets: [{
-          label: 'Ingresos',
-          data: [45000, 52000, 58000, 62000, 84250],
-          borderColor: '#10b981',
-          backgroundColor: 'rgba(16,185,129,0.1)',
-          fill: true,
-          tension: 0.4
-        }, {
-          label: 'Egresos',
-          data: [12000, 13500, 14200, 15800, 18200],
-          borderColor: '#ef4444',
-          backgroundColor: 'rgba(239,68,68,0.1)',
-          fill: true,
-          tension: 0.4
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#8b8b9a', font: { size: 11 } },
-          datalabels: { display: false }
-        },
-        scales: {
-          y: { ticks: { color: '#5a5a6a', font: { size: 10 }, callback: v => '$' + (v/1000) + 'K' }, grid: { color: 'rgba(42,42,58,0.5)' } },
-          x: { ticks: { color: '#5a5a6a', font: { size: 10 } }, grid: { display: false } }
-        }
-      }
-    });
-  }
-  
-  // Payment Methods
-  const pmCtx = document.getElementById('paymentMethodsChart');
-  if (pmCtx) {
-    new Chart(pmCtx.getContext('2d'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Tarjeta Crédito', 'Débito', 'Transferencia', 'Mercado Crédito', 'Otros'],
-        datasets: [{
-          data: [45, 28, 15, 8, 4],
-          backgroundColor: [
-            'rgba(59,130,246,0.8)',
-            'rgba(16,185,129,0.8)',
-            'rgba(245,158,11,0.8)',
-            'rgba(139,92,246,0.8)',
-            'rgba(156,163,175,0.8)'
-          ]
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#8b8b9a', font: { size: 11 } },
-          datalabels: {
-            color: '#fff',
-            font: { weight: 'bold', size: 12 },
-            formatter: (value) => value + '%'
-          }
-        }
-      }
-    });
-  }
-  
-  mercadoPagoChartInitialized = true;
-}
-
-// ========== SWARM CONTROLS ==========
+// CHARTS COMMENTED OUT FOR DEBUGGING
+// Will restore after menu works CONTROLS ==========
 function deploySwarm(btn) {
   if (!btn) btn = document.querySelector('[onclick*="deploySwarm"]');
   btn.textContent = '🚀 Desplegando...';
@@ -640,6 +339,36 @@ document.getElementById('currentDate').textContent = new Date().toLocaleDateStri
 
 // Initialize todo count
 updateTodoCount();
+
+// Load saved preferences
+try {
+  const preferences = JSON.parse(localStorage.getItem('dashboardPreferences') || '{}');
+  
+  // Restore last section if available
+  if (preferences.lastSection) {
+    console.log('Restoring last section:', preferences.lastSection);
+    // Don't auto-navigate, just log it
+  }
+  
+  // Apply UI preferences
+  if (preferences.uiPreferences) {
+    applyUIPreferences(preferences.uiPreferences);
+  }
+  
+  console.log('Preferences loaded:', Object.keys(preferences));
+} catch (e) {
+  console.error('Error loading preferences:', e);
+}
+
+// Initialize project view buttons
+setTimeout(() => {
+  initProjectViewButtons();
+}, 500);
+
+// Update dashboard from memory
+setTimeout(() => {
+  updateDashboardFromMemory();
+}, 1000);
 
 // Welcome message
 setTimeout(() => {
