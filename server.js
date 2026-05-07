@@ -78,14 +78,20 @@ bot.start((ctx) => ctx.reply(
   `/stop - Detener monitoreo`
 ));
 bot.command('status', (ctx) => {
-  ctx.reply(
-    `📊 ESTADO DE LA AGENCIA\n\n` +
-    `✅ Proyectos activos: ${agencyStatus.activeProjects}\n` +
-    `🤖 Agentes trabajando: ${agencyStatus.agentsWorking}/192\n` +
-    `💰 Ingresos hoy: $${agencyStatus.incomeToday}\n` +
-    `🎯 Leads capturados: ${agencyStatus.leadsCaptured}\n` +
-    `⏰ Última actualización: ${new Date(agencyStatus.lastUpdate).toLocaleTimeString()}`
-  );
+  // Obtener estado de contenedores Docker
+  const { exec } = require('child_process');
+  exec('docker ps --format "{{.Names}} {{.Status}}"', (error, stdout) => {
+    const dockerStatus = stdout || 'No se pudo obtener estado Docker';
+    ctx.reply(
+      `📊 ESTADO DE LA AGENCIA\n\n` +
+      `✅ Proyectos activos: ${agencyStatus.activeProjects}\n` +
+      `🤖 Agentes trabajando: ${agencyStatus.agentsWorking}/192\n` +
+      `💰 Ingresos hoy: $${agencyStatus.incomeToday}\n` +
+      `🎯 Leads capturados: ${agencyStatus.leadsCaptured}\n\n` +
+      `🐳 CONTENEDORES DOCKER:\n${dockerStatus}\n\n` +
+      `⏰ Última actualización: ${new Date(agencyStatus.lastUpdate).toLocaleTimeString()}`
+    );
+  });
 });
 bot.command('projects', (ctx) => {
   ctx.reply(
@@ -170,7 +176,58 @@ app.post('/api/notify', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Backend corriendo en puerto ${PORT}`);
   console.log(`📡 Monitoreo de ${projectsPath}`);
+  
+  // Backup diario a Telegram (cada 24 horas)
+  setInterval(() => {
+    performDailyBackup();
+  }, 24 * 60 * 60 * 1000); // 24 horas
+  
+  // Ejecutar backup inicial después de 5 segundos
+  setTimeout(performDailyBackup, 5000);
 });
+
+async function performDailyBackup() {
+  try {
+    // Recopilar datos de localStorage (simulado desde el servidor)
+    const backupData = {
+      timestamp: new Date().toISOString(),
+      crm_clients: JSON.parse(localStorage.getItem('crm_clients') || '[]'),
+      leads: JSON.parse(localStorage.getItem('leads') || '[]'),
+      generatedProjects: JSON.parse(localStorage.getItem('generatedProjects') || '[]'),
+      backupType: 'daily_automatic'
+    };
+    
+    const message = `📤 BACKUP DIARIO - AGENCIA 360\n\n` +
+      `📅 Fecha: ${new Date().toLocaleDateString()}\n` +
+      `👥 Clientes CRM: ${backupData.crm_clients.length}\n` +
+      `🎯 Leads: ${backupData.leads.length}\n` +
+      `🚀 Proyectos: ${backupData.generatedProjects.length}\n\n` +
+      `✅ Datos respaldados. Enviando JSON...`;
+    
+    await bot.telegram.sendMessage(
+      process.env.TELEGRAM_CHAT_ID || 'REPLACE_WITH_CHAT_ID',
+      message
+    );
+    
+    // Enviar archivo JSON
+    const fs = require('fs');
+    const backupFile = `backup-${Date.now()}.json`;
+    fs.writeFileSync(backupFile, JSON.stringify(backupData, null, 2));
+    
+    await bot.telegram.sendDocument(
+      process.env.TELEGRAM_CHAT_ID || 'REPLACE_WITH_CHAT_ID',
+      { source: backupFile, filename: `agencia360-backup-${new Date().toISOString().split('T')[0]}.json` }
+    );
+    
+    // Limpiar archivo temporal
+    fs.unlinkSync(backupFile);
+    
+    console.log('✅ Backup diario enviado a Telegram');
+  } catch (e) {
+    console.error('❌ Error en backup diario:', e.message);
+  }
+}
+
 bot.launch().then(() => {
   console.log('🤖 Bot de Telegram iniciado');
   notifyTelegram('🏭 Agencia 360 Backend Iniciado\nMonitoreo de proyectos activo.');
