@@ -543,8 +543,8 @@ function initMercadoPagoCharts() {
 }
 
 // ========== SWARM CONTROLS ==========
-function deploySwarm() {
-  const btn = event.target;
+function deploySwarm(btn) {
+  if (!btn) btn = document.querySelector('[onclick*="deploySwarm"]');
   btn.textContent = '🚀 Desplegando...';
   btn.disabled = true;
   
@@ -616,8 +616,8 @@ function connectMercadoPago() {
   alert('🔗 Conectando con Mercado Pago API...\n\nPor favor, autoriza la aplicación en la ventana emergente.\n\nClient ID: APP_USR-1234567890\nRedirect URI: http://localhost:3000/mercadopago/callback');
 }
 
-function syncMercadoPago() {
-  const btn = event.target;
+function syncMercadoPago(btn) {
+  if (!btn) btn = document.querySelector('[onclick*="syncMercadoPago"]');
   btn.textContent = '🔄 Sincronizando...';
   btn.disabled = true;
   
